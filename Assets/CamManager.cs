@@ -6,9 +6,9 @@ public class CamManager : MonoBehaviour {
     /* プレイヤーカメラ関連のクラス */
     /* 今後移動方向に応じてカメラの向きを変えたい*/
 
-    public float mouseX, mouseY; // マウス移動量
+    public float mouseX, mouseY,pos; // マウス移動量
     public Vector3 CameraMove = new Vector3(0, 0, 0); // カメラ移動量
-    float mouseSpeed = 10.0f; // カメラ移動スピード
+    float cameraSpeed = 10.0f; // カメラ移動スピード
 
     private GameObject target; // カメラ回転を基にするターゲット
     Player player; // Playerクラスより位置情報を格納
@@ -25,25 +25,29 @@ public class CamManager : MonoBehaviour {
         mouseX = Input.GetAxis("Mouse X"); // マウスカーソルより移動量を取得
         mouseY = Input.GetAxis("Mouse Y");
 
-        if (mouseX != 0)// マウスカーソルが動いていたら
+        pos = Input.GetAxis("Horizontal");
+
+        if (pos != 0)// マウスカーソルが動いていたら
         {
-            if (mouseX > 0) // マウスカーソルが右に向いていたら
+            if (pos > 0)
             {
-                CameraMove = new Vector3(0, mouseSpeed, 0); // カメラ移動量をプラスに
+                CameraMove = new Vector3(0, pos, 0);
             }
-            else if (mouseX < 0) // マウスカーソルが左に向いていたら
+            if (pos < 0)
             {
-                CameraMove = new Vector3(0, -mouseSpeed, 0); // カメラ移動量をマイナスに
+                pos = -pos;
+                CameraMove = new Vector3(0,-pos, 0);
             }
             // カメラ移動
-            transform.Rotate(CameraMove * Time.deltaTime);
+            transform.Rotate((CameraMove*cameraSpeed) * Time.deltaTime);
         }
         else
         {
             // マウス移動量が0になるとカメラの回転がリセットされる
-            CameraMove = Vector3.zero;
-            transform.rotation = Quaternion.Euler(CameraMove);
+            //CameraMove = Vector3.zero;
+            //transform.rotation = Quaternion.Euler(CameraMove);
         }
+
         if (Time.frameCount % 20 ==0)
         {
             // デバッグ用

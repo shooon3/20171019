@@ -9,6 +9,9 @@ public class Player : MonoBehaviour {
 
     const string statusName = "Status"; // ステータスオブジェクトの名前
     private GameObject statusObj; // ステータスオブジェクトを格納する変数
+    public GameObject bullet;
+    public GameObject fire;
+    public GameObject punch;
 
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     CharacterController cc;
@@ -18,16 +21,20 @@ public class Player : MonoBehaviour {
     public int charactorAtk = 0; // 自キャラの攻撃力
     public float charactorSpeed = 0.0f; // 自キャラの移動速度
 
+    private float energy = 100.0f;
+
     public float jumpSpeed = 10.0f; // ジャンプ移動量
     private float runSpeed = 2.0f; // ダッシュ時の倍率
 
-    public Vector3 charMove = new Vector3(0.0f,0.0f,0.0f); // キャラクター移動量
+    public Texture2D point;
+    public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
+    private Vector3 mouseclickPos = new Vector3(0.0f, 0.0f, 0.0f);  
     const float gravity = 9.81f; // 重力
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start() {
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
-
+        Cursor.SetCursor(point,new Vector2(point.width / 2, point.height / 2), CursorMode.ForceSoftware);
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
@@ -45,11 +52,11 @@ public class Player : MonoBehaviour {
                 setterroristStatus(); // テロリスト（プレイヤー）用データ取得メソッドを起動
                 break;
         }
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    }
+
+    // Update is called once per frame
+    void Update() {
         if (cc.isGrounded)
         {
             charMove = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));// キー入力から方向を取得
@@ -57,7 +64,7 @@ public class Player : MonoBehaviour {
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 // 左シフトキーでダッシュ
-                charMove *= charactorSpeed*runSpeed;
+                charMove *= charactorSpeed * runSpeed;
             }
             if (Input.GetButton("Jump"))
             {
@@ -67,12 +74,23 @@ public class Player : MonoBehaviour {
         }
         charMove.y -= gravity * Time.deltaTime; // 重力を計算
         cc.Move(charMove * Time.deltaTime); // キャラクター移動
+
+        if (Input.GetButtonDown("Fire1") && playerGroup ==1)
+        {
+            PlayerAttack();
+        }else if(Input.GetButtonDown("Fire1")&& playerGroup == 2)
+        {
+            mouseclickPos = Input.mousePosition;
+            mouseclickPos.z = 5.0f;
+            terroristAttack(mouseclickPos);
+        }
+
         DebugTest();
     }
 
     void setcitizenStatus() // 市民（NPC）データ取得メソッド、各種データを取得し変数に格納
     {
-        
+
     }
     void setplayerStatus() // 市民（プレイヤー）用データ取得メソッド
     {
@@ -91,5 +109,15 @@ public class Player : MonoBehaviour {
 
     void DebugTest() // デバッグ用メソッド
     {
+    }
+
+    void PlayerAttack()
+    {
+
+    }
+
+    void terroristAttack(Vector3 vec)
+    {
+        Instantiate(bullet,Camera.main.ScreenToWorldPoint(mouseclickPos), Quaternion.identity);
     }
 }
