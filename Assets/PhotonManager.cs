@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhotonManager : Photon.MonoBehaviour {
 
-    void ConnectPhoton()
+    public void ConnectPhoton()
     {
         PhotonNetwork.ConnectUsingSettings("v1.0");
     }
