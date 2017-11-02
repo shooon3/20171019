@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CamManager : MonoBehaviour {
     /* プレイヤーカメラ関連のクラス */
-    /* 今後移動方向に応じてカメラの向きを変えたい*/
+    /**/
 
     public float mouseX, mouseY,pos; // マウス移動量
     public Vector3 CameraMove = new Vector3(0, 0, 0); // カメラ移動量
@@ -27,16 +27,16 @@ public class CamManager : MonoBehaviour {
 
         pos = Input.GetAxis("Horizontal");
 
-        if (pos != 0)// マウスカーソルが動いていたら
+        if (mouseX != 0)// マウスカーソルが動いていたら
         {
-            if (pos > 0)
+            if (mouseX > 0)
             {
-                CameraMove = new Vector3(0, pos, 0);
+                CameraMove = new Vector3(0,mouseX, 0);
             }
-            if (pos < 0)
+            if (mouseX < 0)
             {
-                pos = -pos;
-                CameraMove = new Vector3(0,-pos, 0);
+                mouseX = -mouseX;
+                CameraMove = new Vector3(0,-mouseX, 0);
             }
             // カメラ移動
             transform.Rotate((CameraMove*cameraSpeed) * Time.deltaTime);

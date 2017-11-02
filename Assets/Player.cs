@@ -26,15 +26,16 @@ public class Player : MonoBehaviour {
     public float jumpSpeed = 10.0f; // ジャンプ移動量
     private float runSpeed = 2.0f; // ダッシュ時の倍率
 
-    public Texture2D point;
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
     private Vector3 mouseclickPos = new Vector3(0.0f, 0.0f, 0.0f);  
     const float gravity = 9.81f; // 重力
 
+    public Sprite point;
+    CamManager cm;
+
     // Use this for initialization
     void Start() {
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
-        Cursor.SetCursor(point,new Vector2(point.width / 2, point.height / 2), CursorMode.ForceSoftware);
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
@@ -82,7 +83,7 @@ public class Player : MonoBehaviour {
         {
             mouseclickPos = Input.mousePosition;
             mouseclickPos.z = 5.0f;
-            terroristAttack(mouseclickPos);
+            terroristAttack();
         }
 
         DebugTest();
@@ -116,8 +117,8 @@ public class Player : MonoBehaviour {
 
     }
 
-    void terroristAttack(Vector3 vec)
+    void terroristAttack()
     {
-        Instantiate(bullet,Camera.main.ScreenToWorldPoint(mouseclickPos), Quaternion.identity);
+        GameObject.Instantiate(bullet);
     }
 }
