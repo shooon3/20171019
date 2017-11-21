@@ -7,7 +7,8 @@ public class CamManager : MonoBehaviour {
     /**/
 
     public float mouseX, mouseY,pos; // マウス移動量
-    public Vector3 CameraMove = new Vector3(0, 0, 0); // カメラ移動量
+    public Vector3 cameraMove = new Vector3(0.0f,0.0f,0.0f); // カメラ移動量
+    public Vector3 cameraDirection = new Vector3(0.0f,0.0f,0.0f);
     float cameraSpeed = 10.0f; // カメラ移動スピード
 
     private GameObject target; // カメラ回転を基にするターゲット
@@ -31,21 +32,22 @@ public class CamManager : MonoBehaviour {
         {
             if (mouseX > 0)
             {
-                CameraMove = new Vector3(0,mouseX, 0);
+                cameraMove = new Vector3(0,mouseX, 0);
             }
             if (mouseX < 0)
             {
                 mouseX = -mouseX;
-                CameraMove = new Vector3(0,-mouseX, 0);
+                cameraMove = new Vector3(0,-mouseX, 0);
             }
             // カメラ移動
-            transform.Rotate((CameraMove*cameraSpeed) * Time.deltaTime);
+            cameraDirection = transform.localEulerAngles;
+            transform.Rotate((cameraMove*cameraSpeed) * Time.deltaTime);
         }
         else
         {
             // マウス移動量が0になるとカメラの回転がリセットされる
-            //CameraMove = Vector3.zero;
-            //transform.rotation = Quaternion.Euler(CameraMove);
+            //cameraMove = Vector3.zero;
+            //transform.rotation = Quaternion.Euler(cameraMove);
         }
 
         if (Time.frameCount % 20 ==0)
