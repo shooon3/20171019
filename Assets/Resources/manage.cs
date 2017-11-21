@@ -15,14 +15,14 @@ public class manage : MonoBehaviour {
 	}
 
     //ロビーに入室した
-    void OnJoindLobby()
+    void OnJoinedLobby()
     {
         //どこかのルームへ接続する
         PhotonNetwork.JoinRandomRoom();
     }
 
     //ルームへ入室した
-    void OnJoindRoom()
+    void OnJoinedRoom()
     {
         //入室完了を出力し、キーロック解除
         Debug.Log("ルームへ入室しました");
@@ -30,7 +30,7 @@ public class manage : MonoBehaviour {
     }
 
     //ルームの入室に失敗
-    void OnPhotonRandamJoinfailed()
+    void OnPhotonRandomJoinFailed()
     {
         //自分でルームを作成して入室
         PhotonNetwork.CreateRoom(null);
