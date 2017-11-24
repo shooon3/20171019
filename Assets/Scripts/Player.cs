@@ -252,6 +252,15 @@ public class Player : MonoBehaviour {
     private void DebugTest() // デバッグ用メソッド
     {
     }
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Bank" && playerGroup ==2)
+        {
+
+        }
+    }
+
 }
 
 //        if (cc.isGrounded)

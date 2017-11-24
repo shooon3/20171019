@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionManager : MonoBehaviour {
-
-    public int totalMoney;
-
+public class Conveni : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

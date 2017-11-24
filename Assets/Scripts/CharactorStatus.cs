@@ -11,12 +11,14 @@ public class CharactorStatus : MonoBehaviour
     const int playerMaxHp = 100; // 最大HP
     private int playerAtk = 1; // 攻撃力
     private float playerSpeed = 7.0f; // 移動速度
+    private int playerMoney = 0;
 
     // テロリスト（プレイヤー）の基本ステータス
     private int terroristHp = 200;
     const int terroristMaxHp = 200;
     private int terroristAtk = 50;
     private float terroristSpeed = 7.0f;
+    private int terroristMoney = 0;
 
     // 市民（NPC）の基本ステータス
     private int citizenHp = 100;
