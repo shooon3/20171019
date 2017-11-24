@@ -20,8 +20,10 @@ public class Player : MonoBehaviour {
     [SerializeField] private Curve headCurve; // カメラの上下移動のデータ
     [SerializeField] private LerpController lerpcontroller; // カメラの回転部分のデータ
 
-    [SerializeField] private float energy = 100.0f; // スタンガン発射に必要なエネルギー
-    [SerializeField] private float bulletTimeInterval = 0.75f; // スタンガン発射間隔
+    [SerializeField] public float energy = 100.0f; // スタンガン発射に必要なエネルギー
+    [SerializeField] public float maxEnergy = 100.0f;
+    [SerializeField] private float bulletTimeInterval = 0.0f; // スタンガン発射間隔
+    [SerializeField] private float punchTimeInterval = 0.0f;
 
     [SerializeField] private Camera playerCam; // カメラ移動はmousemanager LerpController このクラスで行うため、現在は使用していない
 
@@ -38,12 +40,13 @@ public class Player : MonoBehaviour {
 
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     CharacterController cc; // キャラクターコントローラーを格納する
+    GUIManager guimanager;
 
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
     private Vector3 mouseclickPos = new Vector3(0.0f, 0.0f, 0.0f); // マウスクリック時の座標
     public Vector3 charDirection = new Vector3(0.0f, 0.0f, 0.0f); // キャラクターの方向
     private Vector3 originCameraPos; // 原点となるカメラ座標
-    private Vector2 charInput; // キャラクター移動用のベクトル
+    private Vector2 charInput; // キャラクターキー入力用のベクトル
     const float gravity = 9.81f; // 重力
     bool isJump; // ジャンプしているか
 
@@ -55,11 +58,12 @@ public class Player : MonoBehaviour {
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
+        guimanager = statusObj.GetComponent<GUIManager>();
 
         playerCam = Camera.main; // カメラの情報を格納
         originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
 
-        energyText.text = "Energy：";
+        energyText.text = "Energy："; // 残りエネルギー確認用
 
         // playerGroupの数値によって各種キャラクターのデータを取得
         switch (playerGroup)
@@ -111,6 +115,7 @@ public class Player : MonoBehaviour {
 
         energyText.text = "Energy：" + energy.ToString();
         bulletTimeInterval -= Time.deltaTime;
+        punchTimeInterval -= Time.deltaTime;
         DebugTest();
     }
 
@@ -161,6 +166,11 @@ public class Player : MonoBehaviour {
 
     void PlayerAttack() // 市民攻撃メソッド
     {
+        if (punchTimeInterval <= 0)
+        {
+            GameObject.Instantiate(punch);
+            punchTimeInterval = 0.5f;
+        }
 
     }
 
@@ -168,9 +178,17 @@ public class Player : MonoBehaviour {
     {
         if (bulletTimeInterval <= 0 && energy > 0)
         {
-         GameObject.Instantiate(bullet); // 弾を発射
-         energy -= 20;
-         bulletTimeInterval = 0.75f;
+            GameObject.Instantiate(bullet); // 弾を発射
+            //iTween.ValueTo(guimanager.gameObject, iTween.Hash(
+            //    "from", energy,
+            //    "to", energy - 20,
+            //    "time", 1.0f,
+            //    "easetype", iTween.EaseType.linear,
+            //    "onupdate", "DownEnergy",
+            //    "onupdatetarget", guimanager.gameObject
+            //    ));
+            energy -= 20;
+            bulletTimeInterval = 0.75f;
         }
     }
 

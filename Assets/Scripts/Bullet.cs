@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour {
 	void Update () {
         // 弾の移動
         transform.position += transform.forward * shootSpeed * Time.deltaTime;
-
+        Debug.Log(this.transform.forward);
         // 原点から30マス以上離れたら削除する
         if (transform.position.magnitude >= 30.0f)
         {
