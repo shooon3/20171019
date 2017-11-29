@@ -7,13 +7,15 @@ public class Player : MonoBehaviour {
     /* プレイヤークラス */
     /* StandardAssetsのFPSControllerを基に作成*/
     /* カメラの向きに合わせて移動する*/
-    [SerializeField] private int playerGroup = 0; // プレイヤーの属性 0で市民（NPC）1で市民（プレイヤー）2でテロリスト（プレイヤー）
-    [SerializeField] private int charactorHp = 0; // 自キャラのHP
-    [SerializeField] private int charactorMaxHp = 0; // 自キャラの最大HP
-    [SerializeField] private int charactorAtk = 0; // 自キャラの攻撃力
-    [SerializeField] private float charactorSpeed = 0.0f; // 自キャラの移動速度
+    [SerializeField] private int playerGroup = 0; 
+    [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
+    [SerializeField] private int charactorHp = 0; // プレイヤーのHP
+    [SerializeField] private int charactorMaxHp = 0; // 最大HP
+    [SerializeField] private int charactorAtk = 0; // 攻撃力
+    [SerializeField] private float charactorSpeed = 0.0f; // 移動速度
+    [SerializeField] private float charactorMoney; // 所持金
     [SerializeField] private float jumpSpeed = 10.0f; // ジャンプ移動量
-    [SerializeField] private float runSpeed = 0.0f; // ダッシュ時の倍率
+    [SerializeField] private float runSpeed = 0.0f; // ダッシュ時のスピード
     [SerializeField] private bool dashFlg; // ダッシュしているか
 
     [SerializeField] private MouseManager mousemanager; // マウス移動のデータ
@@ -23,17 +25,15 @@ public class Player : MonoBehaviour {
     [SerializeField] public float energy = 100.0f; // スタンガン発射に必要なエネルギー
     [SerializeField] public float maxEnergy = 100.0f;
     [SerializeField] private float bulletTimeInterval = 0.0f; // スタンガン発射間隔
-    [SerializeField] private float punchTimeInterval = 0.0f;
+    [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
 
-    [SerializeField] private Camera playerCam; // カメラ移動はmousemanager LerpController このクラスで行うため、現在は使用していない
+    [SerializeField] private Camera playerCam; // カメラオブジェクトを格納
 
     const string statusName = "Status"; // ステータスオブジェクトの名前
     private GameObject statusObj; // ステータスオブジェクトを格納する変数
     public GameObject bullet; // 弾のプレハブ
     public GameObject fire; // 攻撃用のプレハブ（何に使うかは未定）
     public GameObject punch; // 素手攻撃用のプレハブ
-    public GameObject cameraObj;
-
     public Text energyText;
 
     CollisionFlags charCollFlg; // キャラクター衝突フラグ
@@ -50,8 +50,6 @@ public class Player : MonoBehaviour {
     const float gravity = 9.81f; // 重力
     bool isJump; // ジャンプしているか
 
-    CamManager cm;
-
     // Use this for initialization
     void Start() {
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
@@ -60,24 +58,12 @@ public class Player : MonoBehaviour {
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
         guimanager = statusObj.GetComponent<GUIManager>();
 
+        CharactorSetup();
+
         playerCam = Camera.main; // カメラの情報を格納
         originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
 
         energyText.text = "Energy："; // 残りエネルギー確認用
-
-        // playerGroupの数値によって各種キャラクターのデータを取得
-        switch (playerGroup)
-        {
-            case 0:
-                setcitizenStatus(); // 市民（NPC）用データ取得メソッドを起動
-                break;
-            case 1:
-                setplayerStatus(); // 市民（プレイヤー）用データ取得メソッドを起動
-                break;
-            case 2:
-                setterroristStatus(); // テロリスト（プレイヤー）用データ取得メソッドを起動
-                break;
-        }
         mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
     }
 
@@ -103,10 +89,10 @@ public class Player : MonoBehaviour {
         }
         charCollFlg = cc.Move(charDirection * Time.deltaTime);
 
-        if (Input.GetButtonDown("Fire1") && playerGroup ==1)
+        if (Input.GetButtonDown("Fire1") && playerType ==1)
         {
             PlayerAttack(); // 市民の攻撃用メソッド
-        }else if(Input.GetButtonDown("Fire1")&& playerGroup == 2)
+        }else if(Input.GetButtonDown("Fire1")&& playerType == 2)
         {
             mouseclickPos = Input.mousePosition;
             mouseclickPos.z = 5.0f;
@@ -143,25 +129,16 @@ public class Player : MonoBehaviour {
         mousemanager.UpdateCursorLock();
     }
 
-    void setcitizenStatus() // 市民（NPC）データ取得メソッド、各種データを取得し変数に格納
+    void CharactorSetup() // キャラクター情報を取得するメソッド
     {
-
-    }
-    void setplayerStatus() // 市民（プレイヤー）用データ取得メソッド
-    {
-        charactorHp = charactorstatus.postplayerHp();
-        charactorMaxHp = charactorstatus.postplayerMaxHp();
-        charactorAtk = charactorstatus.postplayerAtk();
-        charactorSpeed = charactorstatus.postplayerSpeed();
+        // playerTypeの値により各パラメータを取得
+        charactorHp = charactorstatus.postPlayerHp(playerType);
+        charactorMaxHp = charactorstatus.postPlayerMaxHp(playerType);
+        charactorAtk = charactorstatus.postPlayerAtk(playerType);
+        charactorSpeed = charactorstatus.postPlayerSpeed(playerType);
+        charactorMoney = charactorstatus.postPlayerMoney(playerType);
         runSpeed = charactorSpeed * 2;
-    }
-    void setterroristStatus() // テロリスト（プレイヤー）用データ取得メソッド
-    {
-        charactorHp = charactorstatus.postterroristHp();
-        charactorMaxHp = charactorstatus.postterroristMaxHp();
-        charactorAtk = charactorstatus.postterroristAtk();
-        charactorSpeed = charactorstatus.postterroristSpeed();
-        runSpeed = charactorSpeed * 2;
+        
     }
 
     void PlayerAttack() // 市民攻撃メソッド
@@ -179,14 +156,6 @@ public class Player : MonoBehaviour {
         if (bulletTimeInterval <= 0 && energy > 0)
         {
             GameObject.Instantiate(bullet); // 弾を発射
-            //iTween.ValueTo(guimanager.gameObject, iTween.Hash(
-            //    "from", energy,
-            //    "to", energy - 20,
-            //    "time", 1.0f,
-            //    "easetype", iTween.EaseType.linear,
-            //    "onupdate", "DownEnergy",
-            //    "onupdatetarget", guimanager.gameObject
-            //    ));
             energy -= 20;
             bulletTimeInterval = 0.75f;
         }
@@ -255,29 +224,6 @@ public class Player : MonoBehaviour {
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "Bank" && playerGroup ==2)
-        {
-
-        }
     }
 
 }
-
-//        if (cc.isGrounded)
-//        {
-//            charMove = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));// キー入力から方向を取得
-//            charMove = transform.TransformDirection(charMove); // 移動方向をキャラクター移動量に設定
-//            if (Input.GetKey(KeyCode.LeftShift))
-//            {
-//                // 左シフトキーでダッシュ
-//                charMove *= charactorSpeed* runSpeed;
-//            }
-//            if (Input.GetButton("Jump"))
-//            {
-//                // スペースキーでジャンプ
-//                charMove.y = jumpSpeed;
-//            }
-//        }
-//        charMove.y -= gravity* Time.deltaTime; // 重力を計算
-//cc.Move(charMove* Time.deltaTime); // キャラクター移動
-//charDirection = transform.localEulerAngles;
