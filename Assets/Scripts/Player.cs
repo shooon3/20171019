@@ -7,7 +7,13 @@ public class Player : MonoBehaviour {
     /* プレイヤークラス */
     /* StandardAssetsのFPSControllerを基に作成*/
     /* カメラの向きに合わせて移動する*/
-    [SerializeField] private int playerGroup = 0; 
+
+    public enum Action
+    {
+        NONE = 0,
+        BANKRAID = 1
+    }
+
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
     [SerializeField] private int charactorHp = 0; // プレイヤーのHP
     [SerializeField] private int charactorMaxHp = 0; // 最大HP
@@ -35,8 +41,10 @@ public class Player : MonoBehaviour {
     public GameObject fire; // 攻撃用のプレハブ（何に使うかは未定）
     public GameObject punch; // 素手攻撃用のプレハブ
     public Text energyText;
+    public Text raidText;
 
     CollisionFlags charCollFlg; // キャラクター衝突フラグ
+    public Action actionType = Action.NONE;
 
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     CharacterController cc; // キャラクターコントローラーを格納する
@@ -49,6 +57,8 @@ public class Player : MonoBehaviour {
     private Vector2 charInput; // キャラクターキー入力用のベクトル
     const float gravity = 9.81f; // 重力
     bool isJump; // ジャンプしているか
+    public int actionMode;
+    bool actionFlg = false;
 
     // Use this for initialization
     void Start() {
@@ -59,7 +69,8 @@ public class Player : MonoBehaviour {
         guimanager = statusObj.GetComponent<GUIManager>();
 
         CharactorSetup();
-
+        actionMode = (int)Action.NONE;
+        raidText.enabled = false;
         playerCam = Camera.main; // カメラの情報を格納
         originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
 
@@ -88,6 +99,12 @@ public class Player : MonoBehaviour {
             charDirection += Physics.gravity * Time.deltaTime; // 重力によって落下する
         }
         charCollFlg = cc.Move(charDirection * Time.deltaTime);
+
+        if (actionType != Action.NONE)
+        {
+            IsAction(actionType);
+            Debug.Log("アクション呼び出し");
+        }
 
         if (Input.GetButtonDown("Fire1") && playerType ==1)
         {
@@ -137,6 +154,7 @@ public class Player : MonoBehaviour {
         charactorAtk = charactorstatus.postPlayerAtk(playerType);
         charactorSpeed = charactorstatus.postPlayerSpeed(playerType);
         charactorMoney = charactorstatus.postPlayerMoney(playerType);
+        this.gameObject.tag = charactorstatus.postPlayertTag(playerType);
         runSpeed = charactorSpeed * 2;
         
     }
@@ -218,11 +236,35 @@ public class Player : MonoBehaviour {
         mousemanager.LookRotation(transform, playerCam.transform);
     }
 
-    private void DebugTest() // デバッグ用メソッド
+    void IsAction(Action type)
     {
+        switch (actionType)
+        {
+           case Action.BANKRAID:
+                Bank.raidFlg = true;
+                actionType = Action.NONE;
+                break;
+        }
     }
 
-    void OnCollisionEnter(Collision col)
+    public void GetMoney(int money)
+    {
+        charactorMoney += money;
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Bank" && Input.GetKeyDown(KeyCode.E) == true)
+        {
+            actionType = Action.BANKRAID;
+            raidText.enabled = true;
+        }
+        else
+        {
+            
+        }
+    }
+    private void DebugTest() // デバッグ用メソッド
     {
     }
 

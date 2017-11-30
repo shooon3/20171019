@@ -57,22 +57,24 @@ public class BankManager : MonoBehaviour {
     {
         foreach (int i in bankID)
         {
-            if (i == id && bank.raidFlg ==false)
+            if (i == id && bank.attacked ==false)
             {
-                bank.raidFlg = true;
-                Raid(i);
+                bank.raid = true;
+            }
+            else
+            {
+                Debug.Log("既に襲撃されています");
             }
         }
     }
 
-    public int Raid(int i)
+    public int Raid(int money)
     {
-        return 0;
+        int getMoney;
+        getMoney = money;
+        bank.attacked = true;
+        Debug.Log("Raid関数呼び出し");
+        return getMoney;
     }
-
-    //public int SetMoney(int id)
-    //{
-
-    //}
 
     }
