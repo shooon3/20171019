@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
         NONE = 0,
         BANKRAID = 1
     }
+    public string playerName;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
     [SerializeField] private int charactorHp = 0; // プレイヤーのHP
@@ -57,7 +58,6 @@ public class Player : MonoBehaviour {
     private Vector2 charInput; // キャラクターキー入力用のベクトル
     const float gravity = 9.81f; // 重力
     bool isJump; // ジャンプしているか
-    public int actionMode;
     bool actionFlg = false;
 
     // Use this for initialization
@@ -69,7 +69,6 @@ public class Player : MonoBehaviour {
         guimanager = statusObj.GetComponent<GUIManager>();
 
         CharactorSetup();
-        actionMode = (int)Action.NONE;
         raidText.enabled = false;
         playerCam = Camera.main; // カメラの情報を格納
         originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に

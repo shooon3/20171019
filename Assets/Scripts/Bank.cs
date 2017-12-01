@@ -33,6 +33,7 @@ public class Bank : MonoBehaviour {
             getMoney = thisBankRaid();
             haveMoney = haveMoney - getMoney;
             player.GetMoney(getMoney);
+            Debug.LogFormat("【{0}】が銀行を襲撃、{1}$奪った", player.playerName, getMoney);
             raid = false;
         }
     }
@@ -41,7 +42,6 @@ public class Bank : MonoBehaviour {
     {
         int money;
         money = bankmanager.Raid(haveMoney);
-        Debug.Log("thisBankRaid呼び出し");
         return money;
     }
 
@@ -58,7 +58,6 @@ public class Bank : MonoBehaviour {
     public void Raid()
     {
         bankmanager.RaidCheck(int.Parse(thisBankId));
-        Debug.Log("RaidCheck呼び出し");
     }
 
     void OnTriggerEnter(Collider col)

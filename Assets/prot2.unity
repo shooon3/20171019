@@ -1379,6 +1379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ab3c20b5c03204886aa24655eedf3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerName: "\u30D7\u30EC\u30A4\u30E4\u30FC1"
   playerType: 2
   charactorHp: 0
   charactorMaxHp: 0
@@ -1453,7 +1454,6 @@ MonoBehaviour:
   actionType: 0
   charMove: {x: 0, y: 0, z: 0}
   charDirection: {x: 0, y: 0, z: 0}
-  actionMode: 0
 --- !u!136 &801283853
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2367,6 +2367,7 @@ MonoBehaviour:
   haveMoney: 0
   attacked: 0
   raid: 0
+  getMoney: 0
 --- !u!1001 &1388195892
 Prefab:
   m_ObjectHideFlags: 0

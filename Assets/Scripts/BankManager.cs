@@ -73,7 +73,6 @@ public class BankManager : MonoBehaviour {
         int getMoney;
         getMoney = money;
         bank.attacked = true;
-        Debug.Log("Raid関数呼び出し");
         return getMoney;
     }
 
