@@ -38,19 +38,7 @@ public class manage : MonoBehaviour {
 
     void FixedUpdate ()
     {
-        //左クリックでオブジェクト読み込み
-        if(Input.GetMouseButtonDown(0) && KeyLock)
-        {
-            GameObject mySyncObj =
-            PhotonNetwork.Instantiate("Cube",new Vector3(9.0f,0f,0f),
-            Quaternion.identity,0);
-            //動きをつけるためにRigidbodyを取得し、力を加える
-            Rigidbody mySyncObjRB = mySyncObj.GetComponent<Rigidbody>();
-            mySyncObjRB.isKinematic = false;
-            float rndPow = Random.Range(1.0f, 5.0f);
-            mySyncObjRB.AddForce(Vector3.left * rndPow, ForceMode.
-            Impulse);
-        }
+        transform.Translate(Input.GetAxis("Horizontal") * 0.1f, 0, Input.GetAxis("Vertical") * 0.1f);
     }
 
 }
