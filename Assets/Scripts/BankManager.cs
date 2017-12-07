@@ -4,27 +4,30 @@ using UnityEngine;
 
 public class BankManager : MonoBehaviour {
 
-    Bank bank;
-    public GameObject[] bankObjects;
+    /*銀行の管理メソッド*/
 
-    const int BANKID_SIZE = 5;
-    public int[] bankID;
-    public int[] bankIdEathMoney = new int[BANKID_SIZE];
-    public int[] bankMoney = { 1000, 3000, 5000, 2000, 1000, 3000, 1000 };
-    public int[] bankHighMoney = { 10000, 15000, 12000, 20000, 20000, 30000, 50000 };
+    Bank bank; // 銀行ごとのクラス
+    GUIManager guimanager;
+    public GameObject[] bankObjects; // 銀行ごとのオブジェクト
+
+    const int BANKID_SIZE = 5; // 銀行オブジェクトの最大数
+    public int[] bankID; // 銀行ごとのID
+    public int[] bankIdEathMoney = new int[BANKID_SIZE]; // IDごとの所持金数
+    public int[] bankMoney = { 1000, 3000, 5000, 2000, 1000, 3000, 1000 }; // 所持金
     private int[] bankDefence = { 5, 6, 7, 10, 12, 15, 20 };
 
-    public static bool raidFlg = false;
+    public static bool raidFlg = false; // 襲撃されたか
 
     // Use this for initialization
     void Start()
     {
-        bankObjects = GameObject.FindGameObjectsWithTag("Bank");
-        int i = bankObjects.Length;
-        bankID = new int[i];
-        bankCheck();
+        bankObjects = GameObject.FindGameObjectsWithTag("Bank"); // タグを元にオブジェクトを格納
+        guimanager = GameObject.Find("Status").GetComponent<GUIManager>();
+        int i = bankObjects.Length; // Bankタグのオブジェクトの最大数を取得
+        bankID = new int[i]; // IDの大きさをタグのオブジェクトの最大数に
         for (int j = 0; j < bankID.Length; j++)
         {
+           //銀行のオブジェクトの数だけBankクラスのコンポーネントを取得し、銀行ごとにIDをつける
            bank = GameObject.Find("bankObj").GetComponent<Bank>();
            bankID[j] = int.Parse(bank.thisBankId);
         }
@@ -35,7 +38,7 @@ public class BankManager : MonoBehaviour {
     {
     }
 
-    public int PostMoney(int id)
+    public int PostMoney(int id) // 銀行のお金振り分けメソッド
     {
       int money;
       money = bankMoney[Random.Range(0, 6)];
@@ -53,17 +56,18 @@ public class BankManager : MonoBehaviour {
 
     }
 
-    public void RaidCheck(int id)
+    public void RaidCheck(int id) // 襲撃確認メソッド
     {
-        foreach (int i in bankID)
+        foreach (int i in bankID) // 全銀行のIDを取り出す
         {
-            if (i == id && bank.attacked ==false)
+            if (i == id && bank.attacked ==false) // IDが一致していてかつ一度も襲撃されていなかったら
             {
-                bank.raid = true;
+                bank.raid = true; // 銀行を襲撃する
             }
             else
             {
-                Debug.Log("既に襲撃されています");
+                Debug.Log("既に襲撃されています"); // 一度でも襲撃されていたら襲撃しない
+                guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
             }
         }
     }

@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class Bank : MonoBehaviour {
 
-    BankManager bankmanager;
-    GameObject bankmanagerObj;
-    Player player;
-    public GameObject thisBankObj;
+    /*銀行ごとのクラス*/
 
-    public GameObject raidPlayerObj;
+    BankManager bankmanager; // 銀行管理クラス
+    GameObject bankmanagerObj; // 銀行管理クラスのオブジェクト
+    Player player; // プレイヤー情報
+    public GameObject thisBankObj; // 自分の銀行のオブジェクト
 
-    public string thisBankId;
-    [SerializeField] private int haveMoney;
-    public bool attacked = false;
-    public bool raid = false;
-    public static bool raidFlg = false;
-    [SerializeField]private int getMoney;
+    public GameObject raidPlayerObj; // 襲撃したプレイヤーのオブジェクト
+
+    public string thisBankId; // 自分のID
+    [SerializeField] private int haveMoney; // 所持金
+    public bool attacked = false; // 襲撃されたか
+    public bool raid = false; // 襲撃フラグ
+    public static bool raidFlg = false; // 襲撃フラグ（銀行管理クラス用（
+    [SerializeField]private int getMoney; // 奪われる金額
 
 	// Use this for initialization
 	void Start () {
-        bankmanagerObj = GameObject.Find("Status");
-        bankmanager = bankmanagerObj.GetComponent<BankManager>();
-        haveMoney = bankmanager.PostMoney(int.Parse(thisBankId));
+        bankmanagerObj = GameObject.Find("Status"); // Statusの名前がついているオブジェクトを参照し取得
+        bankmanager = bankmanagerObj.GetComponent<BankManager>(); // オブジェクトから銀行管理クラスコンポーネントを取得
+        haveMoney = bankmanager.PostMoney(int.Parse(thisBankId)); // 銀行管理クラスからIDと所持金を取得
         thisBankObj = this.gameObject;
 	}
 	

@@ -2862,6 +2862,7 @@ GameObject:
   - component: {fileID: 1698316238}
   - component: {fileID: 1698316241}
   - component: {fileID: 1698316240}
+  - component: {fileID: 1698316242}
   m_Layer: 0
   m_Name: Status
   m_TagString: Untagged
@@ -2909,7 +2910,6 @@ MonoBehaviour:
   bankID: 
   bankIdEathMoney: 0000000000000000000000000000000000000000
   bankMoney: e8030000b80b000088130000d0070000e8030000b80b0000e8030000
-  bankHighMoney: 10270000983a0000e02e0000204e0000204e00003075000050c30000
 --- !u!114 &1698316240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2936,6 +2936,20 @@ MonoBehaviour:
   energyFull: {fileID: 0}
   energyCaution: {fileID: 0}
   energyDanger: {fileID: 0}
+  readRadioName: radiolog
+--- !u!114 &1698316242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1698316236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c75a975e891716c4dbb72d969c4e1363, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logName: radiolog
+  csvFile: {fileID: 0}
 --- !u!1001 &1743347631
 Prefab:
   m_ObjectHideFlags: 0

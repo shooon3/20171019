@@ -11,7 +11,9 @@ public class Player : MonoBehaviour {
     public enum Action
     {
         NONE = 0,
-        BANKRAID = 1
+        BANKRAID = 1,
+        TAKEITEM = 2,
+        ENERGYCHARGE = 3
     }
     public string playerName;
 
