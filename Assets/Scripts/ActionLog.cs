@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ActionLog : MonoBehaviour {
+    /*ログ表示用のCSVファイルを格納するクラス*/
 
     public List<string[]> radioCsvDatas = new List<string[]>();
     public TextAsset csvFile;
@@ -22,13 +23,6 @@ public class ActionLog : MonoBehaviour {
 
     void Start()
     {
-        for (int i = 0; i < radioCsvDatas.Count; i++)
-        {
-            for (int j = 0; j < radioCsvDatas[i].Length; j++)
-            {
-                Debug.LogFormat("{0}", radioCsvDatas[i][j]);
-            }
-        }
     }
 
 }

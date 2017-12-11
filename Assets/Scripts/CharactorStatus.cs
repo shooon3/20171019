@@ -16,7 +16,7 @@ public class CharactorStatus : MonoBehaviour
     private int playerAtk = 0; // 攻撃力
     private float playerSpeed = 0.0f; // 移動速度
     private int playerMoney = 0; // 所持金
-    string playerTag;
+    string playerTag; // タグ
 
     // プレイヤー（テロリスト）の基本ステータス
     private int terroristHp = 200;
