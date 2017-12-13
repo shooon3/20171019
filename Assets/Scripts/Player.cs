@@ -31,8 +31,8 @@ public class Player : MonoBehaviour {
     [SerializeField] private Curve headCurve; // カメラの上下移動のデータ
     [SerializeField] private LerpController lerpcontroller; // カメラの回転部分のデータ
 
-    [SerializeField] public float energy = 100.0f; // スタンガン発射に必要なエネルギー
-    [SerializeField] public float maxEnergy = 100.0f;
+    [SerializeField] public int energy = 100; // スタンガン発射に必要なエネルギー
+    [SerializeField] public int maxEnergy = 100;
     [SerializeField] private float bulletTimeInterval = 0.0f; // スタンガン発射間隔
     [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
 
@@ -45,6 +45,7 @@ public class Player : MonoBehaviour {
     public GameObject punch; // 素手攻撃用のプレハブ
     public Text energyText;
     public Text raidText;
+    public Text chargeText;
 
     CollisionFlags charCollFlg; // キャラクター衝突フラグ
     public Action actionType = Action.NONE;
@@ -72,6 +73,7 @@ public class Player : MonoBehaviour {
 
         CharactorSetup();
         raidText.enabled = false;
+        chargeText.enabled = false;
         playerCam = Camera.main; // カメラの情報を格納
         originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
 
@@ -101,7 +103,7 @@ public class Player : MonoBehaviour {
         }
         charCollFlg = cc.Move(charDirection * Time.deltaTime);
 
-        if (actionType != Action.NONE)
+        if (actionType != Action.NONE && Input.GetKey(KeyCode.E)==true)
         {
             IsAction(actionType);
             Debug.Log("アクション呼び出し");
@@ -241,8 +243,12 @@ public class Player : MonoBehaviour {
     {
         switch (actionType)
         {
-           case Action.BANKRAID:
+            case Action.BANKRAID:
                 Bank.raidFlg = true;
+                actionType = Action.NONE;
+                break;
+            case Action.ENERGYCHARGE:
+                Charge.chargeFlg = true;
                 actionType = Action.NONE;
                 break;
         }
@@ -255,14 +261,29 @@ public class Player : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Bank" && Input.GetKeyDown(KeyCode.E) == true)
+        if (col.gameObject.tag == "Bank")
         {
             actionType = Action.BANKRAID;
             raidText.enabled = true;
         }
-        else
+
+        if (col.gameObject.tag == "Charge")
         {
-            
+            actionType = Action.ENERGYCHARGE;
+            chargeText.enabled = true;
+        }
+    }
+    void OnTriggerExit(Collider col)
+    {
+        if (col.gameObject.tag == "Bank" && actionType == Action.BANKRAID)
+        {
+            actionType = Action.NONE;
+            raidText.enabled = false;
+        }
+        if (col.gameObject.tag =="Charge" && actionType == Action.ENERGYCHARGE)
+        {
+            actionType = Action.NONE;
+            chargeText.enabled = false;
         }
     }
     private void DebugTest() // デバッグ用メソッド

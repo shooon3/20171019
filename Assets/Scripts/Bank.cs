@@ -18,7 +18,7 @@ public class Bank : MonoBehaviour {
     [SerializeField] private int haveMoney; // 所持金
     public bool attacked = false; // 襲撃されたか
     public bool raid = false; // 襲撃フラグ
-    public static bool raidFlg = false; // 襲撃フラグ（銀行管理クラス用（
+    public static bool raidFlg = false; // 襲撃フラグ（銀行管理クラス用
     [SerializeField]private int getMoney; // 奪われる金額
 
 	// Use this for initialization

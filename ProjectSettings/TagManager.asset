@@ -7,6 +7,7 @@ TagManager:
   - Bank
   - Citizen
   - Terrorist
+  - Charge
   layers:
   - Default
   - TransparentFX
