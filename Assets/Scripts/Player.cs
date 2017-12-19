@@ -53,6 +53,7 @@ public class Player : MonoBehaviour {
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     CharacterController cc; // キャラクターコントローラーを格納する
     GUIManager guimanager;
+    GameManagement gm;
 
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
     private Vector3 mouseclickPos = new Vector3(0.0f, 0.0f, 0.0f); // マウスクリック時の座標
@@ -62,6 +63,7 @@ public class Player : MonoBehaviour {
     const float gravity = 9.81f; // 重力
     bool isJump; // ジャンプしているか
     bool actionFlg = false;
+    public bool falling = false;
 
     // Use this for initialization
     void Start() {
@@ -117,6 +119,19 @@ public class Player : MonoBehaviour {
             mouseclickPos = Input.mousePosition;
             mouseclickPos.z = 5.0f;
             terroristAttack(); // テロリスト攻撃用メソッド
+        }
+
+        if (falling == true)
+        {
+            //float spawnCount = 0.0f;
+            //float spawnCountLimit = 3.0f;
+            //spawnCount += Time.deltaTime;
+            //if (spawnCount >= spawnCountLimit)
+            //{
+                Transform respawnObj = GameObject.Find("Respawn").GetComponent<Transform>();
+                this.transform.position = respawnObj.transform.position;
+                falling = false;
+            //}
         }
 
         energyText.text = "Energy：" + energy.ToString();
@@ -272,6 +287,12 @@ public class Player : MonoBehaviour {
             actionType = Action.ENERGYCHARGE;
             chargeText.enabled = true;
         }
+
+        if (col.gameObject.tag == "Under")
+        {
+            falling = true;
+        }
+
     }
     void OnTriggerExit(Collider col)
     {
