@@ -5,6 +5,8 @@ using UnityEngine;
 public class manage : MonoBehaviour {
 
     private bool KeyLock;
+    GameObject player;
+    public Vector3 InstancePos = new Vector3(0, 5, 0);
 
     // Use this for initialization
     void Start ()
@@ -12,6 +14,8 @@ public class manage : MonoBehaviour {
         KeyLock = false;
         //サーバへ接続、ロビーへ入室
         PhotonNetwork.ConnectUsingSettings(null);
+        //プレイヤーオブジェクトをResourcesからロード
+        player = Resources.Load("Player") as GameObject;
 	}
 
     //ロビーに入室した
@@ -36,9 +40,14 @@ public class manage : MonoBehaviour {
         PhotonNetwork.CreateRoom(null);
     }
 
-    void FixedUpdate ()
+    public void JoinRoom()
     {
-        transform.Translate(Input.GetAxis("Horizontal") * 0.1f, 0, Input.GetAxis("Vertical") * 0.1f);
+        PhotonNetwork.Instantiate("Player", InstancePos, Quaternion.identity, 0);
+    }
+
+    void FixedUpdate()
+    {
+
     }
 
 }
