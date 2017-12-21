@@ -9,6 +9,8 @@ TagManager:
   - Terrorist
   - Charge
   - Under
+  - GameInfo
+  - GameMaster
   layers:
   - Default
   - TransparentFX

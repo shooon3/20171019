@@ -43,6 +43,7 @@ public class Player : MonoBehaviour {
     public GameObject bullet; // 弾のプレハブ
     public GameObject fire; // 攻撃用のプレハブ（何に使うかは未定）
     public GameObject punch; // 素手攻撃用のプレハブ
+    [SerializeField] GameObject nameLabel;
     public Text energyText;
     public Text raidText;
     public Text chargeText;
@@ -61,6 +62,7 @@ public class Player : MonoBehaviour {
     private Vector3 originCameraPos; // 原点となるカメラ座標
     private Vector2 charInput; // キャラクターキー入力用のベクトル
     const float gravity = 9.81f; // 重力
+    float num;
     bool isJump; // ジャンプしているか
     bool actionFlg = false;
     public bool falling = false;
@@ -72,6 +74,7 @@ public class Player : MonoBehaviour {
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
         guimanager = statusObj.GetComponent<GUIManager>();
+        nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
 
         CharactorSetup();
         raidText.enabled = false;
