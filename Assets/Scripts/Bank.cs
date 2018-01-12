@@ -37,7 +37,15 @@ public class Bank : MonoBehaviour {
             getMoney = thisBankRaid();
             haveMoney = haveMoney - getMoney;
             player.GetMoney(getMoney);
-            Debug.LogFormat("{2}",player.playerName,getMoney,guimanager.LogFormat((int)GUIManager.SenderList.SYSTEM,0,(int)GUIManager.SenderList.SYSTEM,4));
+            guimanager.PlayerInfulenceLogShow(
+                (int)GUIManager.SenderList.SYSTEM, 0,
+                player.playerName,
+                (int)GUIManager.SenderList.SYSTEM, 4,
+                getMoney,
+                (int)GUIManager.SenderList.SYSTEM, 5
+                );
+
+            //Debug.LogFormat("{2}",player.playerName,getMoney,guimanager.LogFormat((int)GUIManager.SenderList.SYSTEM,0,(int)GUIManager.SenderList.SYSTEM,4));
             raid = false;
         }
     }

@@ -18,6 +18,11 @@ public class BankManager : MonoBehaviour {
 
     public static bool raidFlg = false; // 襲撃されたか
 
+    float showTimeLimit = 10.0f;
+   public float timeCount = 0f;
+
+   public bool showFlg = true;
+
     // Use this for initialization
     void Start()
     {
@@ -36,6 +41,12 @@ public class BankManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        timeCount += Time.deltaTime;
+        if (timeCount >= showTimeLimit)
+        {
+            showFlg = true;
+            timeCount = 0;
+        }
     }
 
     public int PostMoney(int id) // 銀行のお金振り分けメソッド
@@ -64,10 +75,11 @@ public class BankManager : MonoBehaviour {
             {
                 bank.raid = true; // 銀行を襲撃する
             }
-            else
+            else if(showFlg == true)
             {
                 Debug.Log("既に襲撃されています"); // 一度でも襲撃されていたら襲撃しない
                 guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+                showFlg = false;
             }
         }
     }

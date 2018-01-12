@@ -16,6 +16,8 @@ public class Player : MonoBehaviour {
         ENERGYCHARGE = 3
     }
     public string playerName;
+    public int playerId;
+    public PhotonView photonview;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
     [SerializeField] private int charactorHp = 0; // プレイヤーのHP
@@ -114,6 +116,8 @@ public class Player : MonoBehaviour {
             Debug.Log("アクション呼び出し");
         }
 
+        
+
         if (Input.GetButtonDown("Fire1") && playerType ==1)
         {
             PlayerAttack(); // 市民の攻撃用メソッド
@@ -126,15 +130,18 @@ public class Player : MonoBehaviour {
 
         if (falling == true)
         {
-            //float spawnCount = 0.0f;
-            //float spawnCountLimit = 3.0f;
-            //spawnCount += Time.deltaTime;
-            //if (spawnCount >= spawnCountLimit)
-            //{
                 Transform respawnObj = GameObject.Find("Respawn").GetComponent<Transform>();
                 this.transform.position = respawnObj.transform.position;
                 falling = false;
-            //}
+        }
+
+        if (charactorHp <= 0 && playerType == 1)
+        {
+            Stun();
+        }
+        if (charactorHp <= 0 && playerType == 2)
+        {
+            Death();
         }
 
         energyText.text = "Energy：" + energy.ToString();
@@ -310,6 +317,19 @@ public class Player : MonoBehaviour {
             chargeText.enabled = false;
         }
     }
+
+    void Stun()
+    {
+        guimanager.LogShow(
+            (int)GUIManager.SenderList.SYSTEM, 0,
+            (int)GUIManager.SenderList.SYSTEM, 4);
+    }
+
+    void Death()
+    {
+
+    }
+
     private void DebugTest() // デバッグ用メソッド
     {
     }

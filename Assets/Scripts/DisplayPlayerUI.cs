@@ -52,6 +52,13 @@ public class DisplayPlayerUI : MonoBehaviour {
 
         CharacterController cc = target.GetComponent<CharacterController>();
 
+        if (cc != null)
+        {
+            charHeight = cc.height;
+        }
+        if (nameLabel != null)
+        {
+        }
     }
 
 }
