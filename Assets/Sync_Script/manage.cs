@@ -8,6 +8,7 @@ public class manage : Photon.MonoBehaviour
     private bool inRoom;
     GameObject player;
     public Vector3 InstancePos = new Vector3(0, 5, 0);
+    public Transform room;
 
     // Use this for initialization
     void Start ()
@@ -46,14 +47,14 @@ public class manage : Photon.MonoBehaviour
     {
         if (inRoom)
         {
-        PhotonNetwork.Instantiate("Player", InstancePos, Quaternion.identity, 0);            
+            PhotonNetwork.Instantiate("Player", room.position + InstancePos, Quaternion.identity, 0);
             inRoom = false;
         }
     }
 
     public void OnClickJoin()
     {
-        //どこかのルームへ接続する
-        PhotonNetwork.JoinRandomRoom();
+        //ルームへ接続する
+        PhotonNetwork.JoinRoom();
     }
 }
