@@ -1,5 +1,6 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: dd0279d71b3672547b47aaede5a64d39
 folderAsset: yes
 timeCreated: 1508391803
@@ -7,6 +8,11 @@ timeCreated: 1508391803
 guid: f8d4db63a33cb544b9ff09a0ba2b8ce2
 folderAsset: yes
 timeCreated: 1511328021
+>>>>>>> origin/KakihanaNkc
+=======
+guid: dd0279d71b3672547b47aaede5a64d39
+folderAsset: yes
+timeCreated: 1508391803
 >>>>>>> origin/KakihanaNkc
 licenseType: Free
 DefaultImporter:

@@ -42,7 +42,7 @@ public class GUIManager : MonoBehaviour {
         //EnergyStatusInit();
         radioLog.CsvRead(readRadioName);
         Debug.Log(radioLog.radioCsvDatas[0][1]);
-        LogShow((int)SenderList.POLICE, 0, (int)SenderList.POLICE, 1); // 出力テスト用
+        // 出力テスト用
     }
 	
 	// Update is called once per frame
@@ -63,6 +63,18 @@ public class GUIManager : MonoBehaviour {
     public void LogShow(int sendWidth,int sendHeight,int textwidth,int textheight) // ログ出力メソッド
     {
         input.text = radioLog.radioCsvDatas[sendWidth][sendHeight] + radioLog.radioCsvDatas[textwidth][textheight]; // 出力用テキストにメッセージを代入
+        originText.text = input.text; // UI画面に出力
+        input.text = string.Empty; // 出力用テキストを削除
+
+        var element = GameObject.Instantiate<RectTransform>(originElement); // ログを生成
+        element.SetParent(content, false); // コンテンツの親に
+        element.SetAsFirstSibling(); // 最前面に
+        element.gameObject.SetActive(true); // ログを表示
+    }
+
+    public void PlayerInfulenceLogShow(int sendWidth,int sendHeight, string playerName, int textWidth1,int textHeight1,int parameter,int textWidth2,int textHeight2)
+    {
+        input.text = radioLog.radioCsvDatas[sendWidth][sendHeight] + playerName + radioLog.radioCsvDatas[textWidth1][textHeight1] + parameter + radioLog.radioCsvDatas[textWidth2][textHeight2]; // 出力用テキストにメッセージを代入
         originText.text = input.text; // UI画面に出力
         input.text = string.Empty; // 出力用テキストを削除
 
