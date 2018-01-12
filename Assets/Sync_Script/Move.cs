@@ -21,6 +21,6 @@ public class Move : MonoBehaviour
 
     int Numbering(string objTag)
     {
-        return ((GameObject.FindGameObjectsWithTag(objTag)).Length) + 1;        
+        return ((GameObject.FindGameObjectsWithTag(objTag)).Length) + 1;
     }
 }

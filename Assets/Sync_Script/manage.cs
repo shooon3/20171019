@@ -23,8 +23,6 @@ public class manage : Photon.MonoBehaviour
     void OnJoinedLobby()
     {
         Debug.Log("On Joined Lobby");
-        //どこかのルームへ接続する
-        PhotonNetwork.JoinRandomRoom();
     }
 
     //ルームへ入室した
@@ -51,5 +49,11 @@ public class manage : Photon.MonoBehaviour
         PhotonNetwork.Instantiate("Player", InstancePos, Quaternion.identity, 0);            
             inRoom = false;
         }
+    }
+
+    public void OnClickJoin()
+    {
+        //どこかのルームへ接続する
+        PhotonNetwork.JoinRandomRoom();
     }
 }
