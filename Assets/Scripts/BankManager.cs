@@ -77,7 +77,7 @@ public class BankManager : MonoBehaviour {
             }
             else if(showFlg == true)
             {
-                Debug.Log("既に襲撃されています"); // 一度でも襲撃されていたら襲撃しない
+                // 一度でも襲撃されていたら襲撃しない
                 guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
                 showFlg = false;
             }

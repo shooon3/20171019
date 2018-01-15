@@ -8,15 +8,15 @@ public class Player : MonoBehaviour {
     /* StandardAssetsのFPSControllerを基に作成*/
     /* カメラの向きに合わせて移動する*/
 
-    public enum Action
+    public enum Action // プレイヤーの行動
     {
-        NONE = 0,
-        BANKRAID = 1,
-        TAKEITEM = 2,
-        ENERGYCHARGE = 3
+        NONE = 0, // 通常状態
+        BANKRAID = 1, // 銀行襲撃
+        TAKEITEM = 2, // アイテム取得
+        ENERGYCHARGE = 3 // エネルギー充電
     }
-    public string playerName;
-    public int playerId;
+    public string playerName; // プレイヤー名
+    public int playerId; // プレイヤーID
     public PhotonView photonview;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト

@@ -35,7 +35,6 @@ public class GameManagement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
         terroPlayerInfo = GameObject.FindGameObjectsWithTag("Terrorist");
         citizenPlayerInfo = GameObject.FindGameObjectsWithTag("Citizen");
         playerId = new int[terroPlayerInfo.Length + citizenPlayerInfo.Length];
@@ -87,10 +86,6 @@ public class GameManagement : MonoBehaviour {
         }
 		
 	}
-
-    public void show()
-    {
-    }
 
     public void GameFinish()
     {

@@ -3199,7 +3199,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 388081788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5135651, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 790236749}
@@ -3957,6 +3957,8 @@ MonoBehaviour:
   bankID: 
   bankIdEathMoney: 0000000000000000000000000000000000000000
   bankMoney: e8030000b80b000088130000d0070000e8030000b80b0000e8030000
+  timeCount: 0
+  showFlg: 1
 --- !u!4 &497079800
 Transform:
   m_ObjectHideFlags: 0
@@ -12441,7 +12443,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 388081789}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9831826
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13000,10 +13002,13 @@ MonoBehaviour:
   citizenGroupMoney: 0
   terroGroupMoney: 0
   count: 0
+  logCount: 0
+  startCount: 0
   isStun: 
   isArrest: 
   isRaid: 
   respawn: 
+  startFlg: 0
 --- !u!4 &1757056520
 Transform:
   m_ObjectHideFlags: 0
@@ -13396,7 +13401,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1832952411}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.951355, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 316126756}
@@ -13405,7 +13410,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.95135397}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1832952413
@@ -14012,7 +14017,7 @@ GameObject:
   - component: {fileID: 1892162910}
   m_Layer: 0
   m_Name: PlayerController
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
