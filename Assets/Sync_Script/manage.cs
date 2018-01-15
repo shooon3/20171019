@@ -5,7 +5,7 @@ using UnityEngine;
 public class manage : Photon.MonoBehaviour
 {
 
-    private bool inRoom;
+    public bool inRoom;
     GameObject player;
     public Vector3 InstancePos = new Vector3(0, 5, 0);
     public Transform room;
@@ -55,6 +55,6 @@ public class manage : Photon.MonoBehaviour
     public void OnClickJoin()
     {
         //ルームへ接続する
-        PhotonNetwork.JoinRoom();
+        PhotonNetwork.JoinRandomRoom();
     }
 }

@@ -36,7 +36,7 @@ public class GUIManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        player = GameObject.Find("PlayerController").GetComponent<Player>();
+        player = GameObject.Find("Player").GetComponent<Player>();
         energyGage = GameObject.Find("EnergyGage").GetComponent<Slider>();
         energyGage.maxValue = player.maxEnergy;
         //EnergyStatusInit();
