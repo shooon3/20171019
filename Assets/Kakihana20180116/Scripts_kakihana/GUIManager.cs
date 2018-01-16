@@ -103,6 +103,17 @@ public class GUIManager : MonoBehaviour {
 
     public void PlayerAttackLogShow(string attackToPlayer, int textWidth1, int textHeight1, string attackedPlayer, int textWidth2, int textHeight2)
     {
+        // プレイヤー同士の行動によりイベントが発生した際のログ出力メソッド
+        /*
+       【引数詳細】
+        PlayerAttackLogShow（
+        イベントを起こしたプレイヤー名、
+        送信内容横列１、送信内容縦列１、
+        イベントにより影響を受けるプレイヤー名、
+        送信内容横列２、送信内容縦列２
+        ※送信元はシステムで固定されるため送信元の引数は設定しない
+        ）
+        */
         input.text = radioLog.radioCsvDatas[(int)SenderList.SYSTEM][0] + attackToPlayer + radioLog.radioCsvDatas[textWidth1][textHeight1] + attackedPlayer + radioLog.radioCsvDatas[textWidth2][textHeight2]; // 出力用テキストにメッセージを代入
         originText.text = input.text; // UI画面に出力
         input.text = string.Empty; // 出力用テキストを削除
