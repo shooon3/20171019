@@ -35,12 +35,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4093916492573516}
   - component: {fileID: 33069765580881720}
-  - component: {fileID: 136275527371339114}
   - component: {fileID: 23055614195623152}
   - component: {fileID: 54355254371017240}
   - component: {fileID: 114048318775483990}
   - component: {fileID: 114410451460426358}
   - component: {fileID: 114676107341740446}
+  - component: {fileID: 136517864091733964}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -234,7 +234,7 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!136 &136275527371339114
+--- !u!136 &136517864091733964
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

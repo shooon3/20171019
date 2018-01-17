@@ -38,7 +38,7 @@ public class Player : MonoBehaviour {
     [SerializeField] private float bulletTimeInterval = 0.0f; // スタンガン発射間隔
     [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
 
-    [SerializeField] private Camera playerCam; // カメラオブジェクトを格納
+    [SerializeField] Camera playerCam; // カメラオブジェクトを格納
 
     const string statusName = "Status"; // ステータスオブジェクトの名前
     private GameObject statusObj; // ステータスオブジェクトを格納する変数

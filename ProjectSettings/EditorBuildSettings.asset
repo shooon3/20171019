@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/photonSave.unity
     guid: 224a7f397aff92c4cb495696f643b985
+  - enabled: 1
+    path: Assets/stage.unity
+    guid: bbf27c97e0c40e54fa0c9e953d38bd62
