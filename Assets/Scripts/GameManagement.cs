@@ -33,6 +33,8 @@ public class GameManagement : MonoBehaviour {
 
     public bool startFlg = false;
 
+    public int playerCount = 0;
+
 	// Use this for initialization
 	void Start () {
         

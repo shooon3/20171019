@@ -9,6 +9,7 @@ public class manage : Photon.MonoBehaviour
     GameObject player;
     public Vector3 InstancePos = new Vector3(0, 5, 0);
     public Transform room;
+    int i = 1;
 
     // Use this for initialization
     void Start ()
@@ -56,5 +57,7 @@ public class manage : Photon.MonoBehaviour
     {
         //ルームへ接続する
         PhotonNetwork.JoinRandomRoom();
+        PhotonNetwork.playerName = "Player" + i;
+        i++;
     }
 }

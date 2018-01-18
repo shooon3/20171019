@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour {
+public class Player : GameManagement {
     /* プレイヤークラス */
     /* StandardAssetsのFPSControllerを基に作成*/
     /* カメラの向きに合わせて移動する*/
@@ -15,8 +15,7 @@ public class Player : MonoBehaviour {
         TAKEITEM = 2,
         ENERGYCHARGE = 3
     }
-    public string playerName;
-    public int playerId;
+
     public PhotonView photonview;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
@@ -68,9 +67,11 @@ public class Player : MonoBehaviour {
     bool isJump; // ジャンプしているか
     bool actionFlg = false;
     public bool falling = false;
+    PhotonPlayer[] photonPlayer = PhotonNetwork.playerList;
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
@@ -86,6 +87,9 @@ public class Player : MonoBehaviour {
 
         energyText.text = "Energy："; // 残りエネルギー確認用
         mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
+
+        playerId[playerCount] = photonPlayer[photonPlayer.Length - 1].ID;
+        playerName[playerCount] = photonPlayer[photonPlayer.Length - 1].NickName;
     }
 
     // Update is called once per frame
