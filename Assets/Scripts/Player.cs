@@ -90,6 +90,8 @@ public class Player : GameManagement {
 
         playerId[playerCount] = photonPlayer[photonPlayer.Length - 1].ID;
         playerName[playerCount] = photonPlayer[photonPlayer.Length - 1].NickName;
+
+        transform.tag = "Player" + playerId[playerCount];
     }
 
     // Update is called once per frame

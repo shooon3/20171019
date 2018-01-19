@@ -6,10 +6,12 @@ public class manage : Photon.MonoBehaviour
 {
 
     public bool inRoom;
-    GameObject player;
+    Transform[] player = new Transform[2];
+    public Transform[] spawnPos = new Transform[2];
     public Vector3 InstancePos = new Vector3(0, 5, 0);
     public Transform room;
-    int i = 1;
+    int count = 0;
+    PhotonPlayer[] photonPlayer;
 
     // Use this for initialization
     void Start ()
@@ -18,8 +20,8 @@ public class manage : Photon.MonoBehaviour
         //サーバへ接続、ロビーへ入室
         PhotonNetwork.ConnectUsingSettings("v1.0");
         //プレイヤーオブジェクトをResourcesからロード
-        player = Resources.Load("Player") as GameObject;
-	}
+        photonPlayer = PhotonNetwork.playerList;
+    }
 
     //ロビーに入室した
     void OnJoinedLobby()
@@ -33,6 +35,7 @@ public class manage : Photon.MonoBehaviour
         //入室完了を出力し、キーロック解除
         Debug.Log("On Joined Room");
         inRoom = true;
+        InstantiatePlayerObject();
     }
 
     //ルームの入室に失敗
@@ -42,22 +45,22 @@ public class manage : Photon.MonoBehaviour
         //自分でルームを作成して入室
         PhotonNetwork.CreateRoom(null);
         inRoom = true;
+        InstantiatePlayerObject();
     }
 
-    void Update()
+    void InstantiatePlayerObject()
     {
-        if (inRoom)
-        {
-            PhotonNetwork.Instantiate("Player", room.position + InstancePos, Quaternion.identity, 0);
-            inRoom = false;
-        }
+        PhotonNetwork.Instantiate("Player", room.position + InstancePos, Quaternion.identity, 0);
     }
 
     public void OnClickJoin()
     {
         //ルームへ接続する
         PhotonNetwork.JoinRandomRoom();
-        PhotonNetwork.playerName = "Player" + i;
-        i++;
+    }
+
+    public void OnClickSpawn()
+    {
+
     }
 }
