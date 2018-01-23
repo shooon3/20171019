@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class GUIManager : MonoBehaviour {
 
+    /*
+    UI関連表示クラス
+    */
+
     public enum SenderList // 無線送信元リスト
     {
         SYSTEM = 0, // システムメッセージ
@@ -25,7 +29,7 @@ public class GUIManager : MonoBehaviour {
     [SerializeField] private Text originText; // 生成するテキスト
     [SerializeField] private InputField input; // 入力用テキスト
 
-    public string readRadioName;
+    public string readRadioName; // 参照するCSVファイル名
     ActionLog radioLog = new ActionLog(); // 参照するCSV読み込みスクリプト
 
     void Awake()
@@ -41,8 +45,6 @@ public class GUIManager : MonoBehaviour {
         energyGage.maxValue = player.maxEnergy;
         //EnergyStatusInit();
         radioLog.CsvRead(readRadioName);
-        Debug.Log(radioLog.radioCsvDatas[0][1]);
-        // 出力テスト用
     }
 	
 	// Update is called once per frame
@@ -60,8 +62,12 @@ public class GUIManager : MonoBehaviour {
         energyFull.fillAmount = downValue / player.maxEnergy;
     }
 
-    public void LogShow(int sendWidth,int sendHeight,int textwidth,int textheight) // ログ出力メソッド
+    public void LogShow(int sendWidth,int sendHeight,int textwidth,int textheight) // 通常ログ出力メソッド
     {
+        /*
+        【引数詳細】
+        LogShow（送信者名横列、送信者名縦列、送信内容横列、送信内容縦列）
+        */
         input.text = radioLog.radioCsvDatas[sendWidth][sendHeight] + radioLog.radioCsvDatas[textwidth][textheight]; // 出力用テキストにメッセージを代入
         originText.text = input.text; // UI画面に出力
         input.text = string.Empty; // 出力用テキストを削除
@@ -74,7 +80,41 @@ public class GUIManager : MonoBehaviour {
 
     public void PlayerInfulenceLogShow(int sendWidth,int sendHeight, string playerName, int textWidth1,int textHeight1,int parameter,int textWidth2,int textHeight2)
     {
+        // プレイヤーの行動によりイベントが発生した際のログ出力メソッド
+        /*
+       【引数詳細】
+        PlayerInfulenceLogShow（
+        送信者名横列、送信者名縦列、
+        イベントを起こしたプレイヤー名、
+        送信内容横列１、送信内容縦列１、
+        イベントにより変化するパラメータ名、
+        送信内容横列２、送信内容縦列２
+        ）
+        */
         input.text = radioLog.radioCsvDatas[sendWidth][sendHeight] + playerName + radioLog.radioCsvDatas[textWidth1][textHeight1] + parameter + radioLog.radioCsvDatas[textWidth2][textHeight2]; // 出力用テキストにメッセージを代入
+        originText.text = input.text; // UI画面に出力
+        input.text = string.Empty; // 出力用テキストを削除
+
+        var element = GameObject.Instantiate<RectTransform>(originElement); // ログを生成
+        element.SetParent(content, false); // コンテンツの親に
+        element.SetAsFirstSibling(); // 最前面に
+        element.gameObject.SetActive(true); // ログを表示
+    }
+
+    public void PlayerAttackLogShow(string attackToPlayer, int textWidth1, int textHeight1, string attackedPlayer, int textWidth2, int textHeight2)
+    {
+        // プレイヤー同士の行動によりイベントが発生した際のログ出力メソッド
+        /*
+       【引数詳細】
+        PlayerAttackLogShow（
+        イベントを起こしたプレイヤー名、
+        送信内容横列１、送信内容縦列１、
+        イベントにより影響を受けるプレイヤー名、
+        送信内容横列２、送信内容縦列２
+        ※送信元はシステムで固定されるため送信元の引数は設定しない
+        ）
+        */
+        input.text = radioLog.radioCsvDatas[(int)SenderList.SYSTEM][0] + attackToPlayer + radioLog.radioCsvDatas[textWidth1][textHeight1] + attackedPlayer + radioLog.radioCsvDatas[textWidth2][textHeight2]; // 出力用テキストにメッセージを代入
         originText.text = input.text; // UI画面に出力
         input.text = string.Empty; // 出力用テキストを削除
 

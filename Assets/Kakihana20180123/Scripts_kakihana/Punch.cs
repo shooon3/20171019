@@ -5,7 +5,8 @@ using UnityEngine;
 public class Punch : MonoBehaviour {
 
     Transform playerTransform; // プレイヤーの座標
-    GameObject playerObj; // プレイヤーのゲームオブジェクトを格納
+    GameObject playerObj;//プレイヤーのオブジェクト
+
 
     // Use this for initialization
     void Start()

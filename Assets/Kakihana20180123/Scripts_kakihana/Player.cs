@@ -8,12 +8,12 @@ public class Player : GameManagement {
     /* StandardAssetsのFPSControllerを基に作成*/
     /* カメラの向きに合わせて移動する*/
 
-    public enum Action
+    public enum Action // プレイヤーの行動
     {
-        NONE = 0,
-        BANKRAID = 1,
-        TAKEITEM = 2,
-        ENERGYCHARGE = 3
+        NONE = 0, // 通常状態
+        BANKRAID = 1, // 銀行襲撃
+        TAKEITEM = 2, // アイテム取得
+        ENERGYCHARGE = 3 // エネルギー充電
     }
 
     public PhotonView photonview;
@@ -67,11 +67,19 @@ public class Player : GameManagement {
     bool isJump; // ジャンプしているか
     bool actionFlg = false;
     public bool falling = false;
+
     PhotonPlayer[] photonPlayer = PhotonNetwork.playerList;
 
     // Use this for initialization
     void Start()
     {
+        //photonViewを取得
+        photonview = GetComponent<PhotonView>();
+
+        //所有者が自分ではない場合処理しない
+        if (!photonview.isMine)
+            return;
+
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
@@ -88,14 +96,17 @@ public class Player : GameManagement {
         energyText.text = "Energy："; // 残りエネルギー確認用
         mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
 
-        playerId[playerCount] = photonPlayer[photonPlayer.Length - 1].ID;
-        playerName[playerCount] = photonPlayer[photonPlayer.Length - 1].NickName;
-
-        transform.tag = "Player" + playerId[playerCount];
+        playerId[photonview.ownerId] = photonview.ownerId;
+        playerName[photonview.ownerId] = "Player" + photonview.ownerId;
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        //所有者が自分ではない場合処理しない
+        if (!photonview.isMine)
+            return;
+
         RotateView(); // カメラとキャラクターの向きを更新する
         if (cc.isGrounded) // 地面に設置していたら
         {
@@ -158,10 +169,14 @@ public class Player : GameManagement {
 
     void FixedUpdate()
     {
+        //所有者が自分ではない場合処理をしない
+        if (!photonview.isMine)
+            return;
+
         float speed;
         GetInput(out speed); // キャラクター移動方向の取得
         charMove = transform.forward * charInput.y + transform.right * charInput.x; // キャラクター移動量を設定
-
+        playerCam.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, playerCam.transform.localRotation, Time.deltaTime);
         RaycastHit hit;
         Physics.SphereCast( // 地面の設置判定
             transform.position,
@@ -218,11 +233,13 @@ public class Player : GameManagement {
         Vector3 newCameraPos;
         if (cc.velocity.magnitude>0&&cc.isGrounded)
         {
+            playerCam.transform.localPosition = this.transform.localPosition;
             newCameraPos = playerCam.transform.localPosition;
             newCameraPos.y = playerCam.transform.localPosition.y - lerpcontroller.Offset();
         }
         else
         {
+            playerCam.transform.localPosition = this.transform.localPosition;
             newCameraPos = playerCam.transform.localPosition;
             newCameraPos.y = originCameraPos.y - lerpcontroller.Offset();
         }

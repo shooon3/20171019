@@ -44,8 +44,6 @@ public class Bank : MonoBehaviour {
                 getMoney,
                 (int)GUIManager.SenderList.SYSTEM, 5
                 );
-
-            //Debug.LogFormat("{2}",player.playerName,getMoney,guimanager.LogFormat((int)GUIManager.SenderList.SYSTEM,0,(int)GUIManager.SenderList.SYSTEM,4));
             raid = false;
         }
     }

@@ -13,8 +13,10 @@ public class MouseManager {
     public float smoothTime = 5.0f; // マウススムージングのスピード
     public bool lockCursor = true; // カーソルを非表示にするかどうか
 
-    private Quaternion charaTargetRotation; // プレイヤーのクォータニオン
-    private Quaternion cameraTargetRotation; // カメラのクォータニオン
+   [SerializeField] private Quaternion charaTargetRotation; // プレイヤーのクォータニオン
+   [SerializeField] private Quaternion cameraTargetRotation; // カメラのクォータニオン
+   [SerializeField] private Quaternion cameraYRotation;
+    [SerializeField] private Quaternion rot;
     private bool isLockCursor = true; // 「今」カーソルが非表示になっているかどうか
 
     public void Init(Transform charactor,Transform camera)
@@ -30,7 +32,8 @@ public class MouseManager {
         float Xrot = Input.GetAxis("Mouse Y") * XSensitivity;
 
         charaTargetRotation *= Quaternion.Euler(0.0f, Yrot, 0.0f);
-        cameraTargetRotation *= Quaternion.Euler(-Xrot, 0.0f, 0.0f);
+
+        cameraTargetRotation *= Quaternion.Euler(0.0f, Yrot, 0.0f);
 
         if (clampVerticalRotation)
         {
@@ -101,7 +104,7 @@ public class MouseManager {
         }
     }
 
-    Quaternion ClampRotationAroundXAxis(Quaternion q) // カメラ回転メソッド
+    Quaternion ClampRotationAroundXAxis(Quaternion q) // カメラ回転制限メソッド
     {
         q.x /= q.w;
         q.y /= q.w;
@@ -111,9 +114,20 @@ public class MouseManager {
         float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
 
         angleX = Mathf.Clamp(angleX, minNumX, maxNumX);
-
         q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
+        return q;
+    }
+    Quaternion ClampRotationAroundYAxis(Quaternion q) // カメラ回転制限メソッド
+    {
+        q.x /= q.w;
+        q.y /= q.w;
+        q.z /= q.w;
+        q.w = 1.0f;
 
+        float angleY = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.y);
+
+        angleY = Mathf.Clamp(angleY, minNumX, maxNumX);
+        q.y = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleY);
         return q;
     }
 }

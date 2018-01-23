@@ -6,7 +6,7 @@ public class manage : Photon.MonoBehaviour
 {
 
     public bool inRoom;
-    Transform[] player = new Transform[2];
+
     public Transform[] spawnPos = new Transform[2];
     public Vector3 InstancePos = new Vector3(0, 5, 0);
     public Transform room;
