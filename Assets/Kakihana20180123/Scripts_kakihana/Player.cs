@@ -155,7 +155,7 @@ public class Player : MonoBehaviour {
         float speed;
         GetInput(out speed); // キャラクター移動方向の取得
         charMove = transform.forward * charInput.y + transform.right * charInput.x; // キャラクター移動量を設定
-
+        playerCam.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, playerCam.transform.localRotation, Time.deltaTime);
         RaycastHit hit;
         Physics.SphereCast( // 地面の設置判定
             transform.position,
@@ -212,11 +212,13 @@ public class Player : MonoBehaviour {
         Vector3 newCameraPos;
         if (cc.velocity.magnitude>0&&cc.isGrounded)
         {
+            playerCam.transform.localPosition = this.transform.localPosition;
             newCameraPos = playerCam.transform.localPosition;
             newCameraPos.y = playerCam.transform.localPosition.y - lerpcontroller.Offset();
         }
         else
         {
+            playerCam.transform.localPosition = this.transform.localPosition;
             newCameraPos = playerCam.transform.localPosition;
             newCameraPos.y = originCameraPos.y - lerpcontroller.Offset();
         }
