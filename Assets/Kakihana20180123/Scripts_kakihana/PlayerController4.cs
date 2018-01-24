@@ -138,7 +138,7 @@ public class PlayerController4 : MonoBehaviour {
         {
             mouseclickPos = Input.mousePosition;
             mouseclickPos.z = 5.0f;
-            terroristAttack(); // テロリスト攻撃用メソッド
+            MisdeedAttack(); // テロリスト攻撃用メソッド
         }
 
         if (falling == true)
@@ -208,7 +208,7 @@ public class PlayerController4 : MonoBehaviour {
 
     }
 
-    void terroristAttack() // テロリスト攻撃メソッド
+    void MisdeedAttack() // テロリスト攻撃メソッド
     {
         if (bulletTimeInterval <= 0 && energy > 0)
         {

@@ -17,7 +17,8 @@ public class Player : MonoBehaviour {
     }
     public string playerName; // プレイヤー名
     public int playerId; // プレイヤーID
-    public PhotonView photonview;
+    public PhotonView myPhotonView;
+    public PhotonTransformView myPhotonTransView;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
     [SerializeField] private int charactorHp = 0; // プレイヤーのHP
@@ -71,25 +72,33 @@ public class Player : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
-        // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
-        statusObj = GameObject.Find(statusName);
-        charactorstatus = statusObj.GetComponent<CharactorStatus>();
-        guimanager = statusObj.GetComponent<GUIManager>();
-        nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
+        if (myPhotonView.isMine)
+        {
+            cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
+                                                      // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
+            statusObj = GameObject.Find(statusName);
+            charactorstatus = statusObj.GetComponent<CharactorStatus>();
+            guimanager = statusObj.GetComponent<GUIManager>();
+            nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
 
-        CharactorSetup();
-        raidText.enabled = false;
-        chargeText.enabled = false;
-        playerCam = Camera.main; // カメラの情報を格納
-        originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
+            CharactorSetup();
+            raidText.enabled = false;
+            chargeText.enabled = false;
+            playerCam = Camera.main; // カメラの情報を格納
+            originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
 
-        energyText.text = "Energy："; // 残りエネルギー確認用
-        mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
+            energyText.text = "Energy："; // 残りエネルギー確認用
+            mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
+
+        }
     }
 
     // Update is called once per frame
     void Update() {
+        if (!myPhotonView.isMine)
+        {
+            return;
+        }
         RotateView(); // カメラとキャラクターの向きを更新する
         if (cc.isGrounded) // 地面に設置していたら
         {
@@ -147,6 +156,8 @@ public class Player : MonoBehaviour {
         energyText.text = "Energy：" + energy.ToString();
         bulletTimeInterval -= Time.deltaTime;
         punchTimeInterval -= Time.deltaTime;
+        Vector3 velocity = cc.velocity;
+        myPhotonTransView.SetSynchronizedValues(velocity,0);
         DebugTest();
     }
 

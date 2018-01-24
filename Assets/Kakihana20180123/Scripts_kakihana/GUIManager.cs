@@ -24,7 +24,7 @@ public class GUIManager : MonoBehaviour {
     private PlayerController4 playerInfo4;
     GameManagement gm;
     public GameObject GameMaster;
-    public Slider energyGage; // エネルギーゲージ
+    public Slider energyGage1, energyGage2, energyGage3, energyGage4; // エネルギーゲージ
 
     public Image energyFull;
     public Image energyCaution;
@@ -47,22 +47,27 @@ public class GUIManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         gm = GameMaster.GetComponent<GameManagement>();
-        player = GameObject.Find("PlayerController").GetComponent<Player>();
         playerInfo1 = gm.getPlayerInfo1(playerInfo1);
         playerInfo2 = gm.getPlayerInfo2(playerInfo2);
         playerInfo3 = gm.getPlayerInfo3(playerInfo3);
         playerInfo4 = gm.getPlayerInfo4(playerInfo4);
-        energyGage = GameObject.Find("EnergyGage").GetComponent<Slider>();
-        energyGage.maxValue = player.maxEnergy;
-        //EnergyStatusInit();
+        energyGage1 = GameObject.Find("EnergyGage").GetComponent<Slider>();
+        energyGage1.maxValue = playerInfo1.maxEnergy;
+        energyGage2.maxValue = playerInfo2.maxEnergy;
+        energyGage3.maxValue = playerInfo3.maxEnergy;
+        energyGage4.maxValue = playerInfo4.maxEnergy;
         radioLog.CsvRead(readRadioName);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        energyGage.value = player.energy;
-		
-	}
+        energyGage1.value = playerInfo1.energy;
+        energyGage2.value = playerInfo2.energy;
+        energyGage3.value = playerInfo3.energy;
+        energyGage4.value = playerInfo4.energy;
+
+
+    }
 
     void EnergyStatusInit()
     {
