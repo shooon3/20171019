@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagement : MonoBehaviour {
+public class GameManagement : Photon.MonoBehaviour {
 
     /*共有したいゲーム情報を管理するクラス*/
 
@@ -33,20 +33,26 @@ public class GameManagement : MonoBehaviour {
 
     public bool startFlg = false;
 
-    public int playerCount = 0;
+    PhotonView m_photonView;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         terroPlayerInfo = GameObject.FindGameObjectsWithTag("Terrorist");
         citizenPlayerInfo = GameObject.FindGameObjectsWithTag("Citizen");
         playerId = new int[terroPlayerInfo.Length + citizenPlayerInfo.Length];
         GameObject statusObj = GameObject.Find("Status");
         guimanager = statusObj.GetComponent<GUIManager>();
+        m_photonView = GetComponent<PhotonView>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (Time.frameCount % 60 ==0)
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!m_photonView)
+            return;
+
+        if (Time.frameCount % 60 == 0)
         {
             startCount++;
         }
@@ -86,8 +92,25 @@ public class GameManagement : MonoBehaviour {
                 GameFinish();
             }
         }
-		
-	}
+    }
+
+    void OnPhotonSerializeView(PhotonStream stream,PhotonMessageInfo info)
+    {
+        if(stream.isWriting)//データの送信
+        {
+            stream.SendNext(playerId[m_photonView.ownerId]);
+            stream.SendNext(playerName[m_photonView.ownerId]);
+            stream.SendNext(playerHp[m_photonView.ownerId]);
+            stream.SendNext(areyouTerrorist[m_photonView.ownerId]);
+        }
+        else//受信
+        {
+            playerId = (int[])stream.ReceiveNext();
+            playerName = (string[])stream.ReceiveNext();
+            playerHp = (int[])stream.ReceiveNext();
+            areyouTerrorist = (bool[])stream.ReceiveNext();
+        }
+    }
 
     public void GameFinish()
     {
