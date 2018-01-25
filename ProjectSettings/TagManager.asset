@@ -11,6 +11,8 @@ TagManager:
   - Under
   - GameInfo
   - GameMaster
+  - Misdeed
+  - Guardian
   layers:
   - Default
   - TransparentFX

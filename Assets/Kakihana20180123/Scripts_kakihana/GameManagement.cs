@@ -10,14 +10,7 @@ public class GameManagement : MonoBehaviour {
     public GameObject[] terroPlayerInfo; // テロリストのプレイヤー情報
     public GameObject player1, player2, player3, player4;
     [SerializeField]
-    private PlayerController1 playerInfo1;
-    [SerializeField]
-    private PlayerController2 playerInfo2;
-    [SerializeField]
-    private PlayerController3 playerInfo3;
-    [SerializeField]
-    private PlayerController4 playerInfo4;
-
+    private PlayerController playerInfo1;
     GUIManager guimanager;
 
     public int[] playerId; // プレイヤーID
@@ -97,40 +90,13 @@ public class GameManagement : MonoBehaviour {
 
     public void PlayerInfoInit()
     {
-        player1 = GameObject.Find("Player1");
-        player2 = GameObject.Find("Player2");
-        player3 = GameObject.Find("Player3");
-        player4 = GameObject.Find("Player4");
-        playerInfo1 = player1.GetComponent<PlayerController1>();
-        playerInfo2 = player2.GetComponent<PlayerController2>();
-        playerInfo3 = player3.GetComponent<PlayerController3>();
-        playerInfo4 = player4.GetComponent<PlayerController4>();
+        player1 = GameObject.Find("Player");
+        playerInfo1 = player1.GetComponent<PlayerController>();
     }
 
     public void GameFinish()
     {
 
-    }
-
-    public PlayerController1 getPlayerInfo1(PlayerController1 player1)
-    {
-        player1 = playerInfo1;
-        return player1;
-    }
-    public PlayerController2 getPlayerInfo2(PlayerController2 player2)
-    {
-        player2 = playerInfo2;
-        return player2;
-    }
-    public PlayerController3 getPlayerInfo3(PlayerController3 player3)
-    {
-        player3 = playerInfo3;
-        return player3;
-    }
-    public PlayerController4 getPlayerInfo4(PlayerController4 player4)
-    {
-        player4 = playerInfo4;
-        return player4;
     }
 
 }

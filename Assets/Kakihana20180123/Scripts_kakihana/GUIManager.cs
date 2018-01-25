@@ -17,11 +17,7 @@ public class GUIManager : MonoBehaviour {
         POLICECAR // パトカー
     }
 
-    Player player; // プレイヤー情報
-    private PlayerController1 playerInfo1;
-    private PlayerController2 playerInfo2;
-    private PlayerController3 playerInfo3;
-    private PlayerController4 playerInfo4;
+    PlayerController player; // プレイヤー情報
     GameManagement gm;
     public GameObject GameMaster;
     public Slider energyGage1, energyGage2, energyGage3, energyGage4; // エネルギーゲージ
@@ -47,25 +43,14 @@ public class GUIManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         gm = GameMaster.GetComponent<GameManagement>();
-        playerInfo1 = gm.getPlayerInfo1(playerInfo1);
-        playerInfo2 = gm.getPlayerInfo2(playerInfo2);
-        playerInfo3 = gm.getPlayerInfo3(playerInfo3);
-        playerInfo4 = gm.getPlayerInfo4(playerInfo4);
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
         energyGage1 = GameObject.Find("EnergyGage").GetComponent<Slider>();
-        energyGage1.maxValue = playerInfo1.maxEnergy;
-        energyGage2.maxValue = playerInfo2.maxEnergy;
-        energyGage3.maxValue = playerInfo3.maxEnergy;
-        energyGage4.maxValue = playerInfo4.maxEnergy;
         radioLog.CsvRead(readRadioName);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        energyGage1.value = playerInfo1.energy;
-        energyGage2.value = playerInfo2.energy;
-        energyGage3.value = playerInfo3.energy;
-        energyGage4.value = playerInfo4.energy;
-
+        energyGage1.value = player.energy;
 
     }
 

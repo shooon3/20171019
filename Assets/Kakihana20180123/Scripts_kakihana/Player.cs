@@ -75,7 +75,7 @@ public class Player : MonoBehaviour {
         if (myPhotonView.isMine)
         {
             cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
-                                                      // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
+            // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
             statusObj = GameObject.Find(statusName);
             charactorstatus = statusObj.GetComponent<CharactorStatus>();
             guimanager = statusObj.GetComponent<GUIManager>();
