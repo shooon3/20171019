@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagement : Photon.MonoBehaviour {
+public class GameManagement : Photon.MonoBehaviour
+{
 
     /*共有したいゲーム情報を管理するクラス*/
 
     public GameObject[] citizenPlayerInfo; // 市民のプレイヤー情報
     public GameObject[] terroPlayerInfo; // テロリストのプレイヤー情報
 
-    GUIManager guimanager;
+    public GUIManager guimanager;
+
+    public int MyNumber;//プレイヤーIDのバッファ
 
     public int[] playerId; // プレイヤーID
     public string[] playerName; // プレイヤー名
@@ -33,7 +36,7 @@ public class GameManagement : Photon.MonoBehaviour {
 
     public bool startFlg = false;
 
-    PhotonView m_photonView;
+    public PhotonView m_photon_manege;
 
 	// Use this for initialization
 	void Start ()
@@ -41,17 +44,15 @@ public class GameManagement : Photon.MonoBehaviour {
         terroPlayerInfo = GameObject.FindGameObjectsWithTag("Terrorist");
         citizenPlayerInfo = GameObject.FindGameObjectsWithTag("Citizen");
         playerId = new int[terroPlayerInfo.Length + citizenPlayerInfo.Length];
-        GameObject statusObj = GameObject.Find("Status");
-        guimanager = statusObj.GetComponent<GUIManager>();
-        m_photonView = GetComponent<PhotonView>();
+        m_photon_manege = GetComponent<PhotonView>();
+
+        playerId[MyNumber] = MyNumber;
+        playerName[MyNumber] = "Player" + MyNumber;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!m_photonView)
-            return;
-
         if (Time.frameCount % 60 == 0)
         {
             startCount++;
@@ -98,10 +99,10 @@ public class GameManagement : Photon.MonoBehaviour {
     {
         if(stream.isWriting)//データの送信
         {
-            stream.SendNext(playerId[m_photonView.ownerId]);
-            stream.SendNext(playerName[m_photonView.ownerId]);
-            stream.SendNext(playerHp[m_photonView.ownerId]);
-            stream.SendNext(areyouTerrorist[m_photonView.ownerId]);
+            stream.SendNext(playerId[m_photon_manege.viewID]);
+            stream.SendNext(playerName[m_photon_manege.viewID]);
+            stream.SendNext(playerHp[m_photon_manege.viewID]);
+            stream.SendNext(areyouTerrorist[m_photon_manege.viewID]);
         }
         else//受信
         {
@@ -116,5 +117,4 @@ public class GameManagement : Photon.MonoBehaviour {
     {
 
     }
-
 }

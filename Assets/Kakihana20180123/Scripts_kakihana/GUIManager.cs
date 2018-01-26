@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIManager : MonoBehaviour {
-
+public class GUIManager : GameManagement
+{
     /*
     UI関連表示クラス
     */
@@ -16,8 +16,7 @@ public class GUIManager : MonoBehaviour {
         COMMAND, // 通信指令部
         POLICECAR // パトカー
     }
-
-    Player player; // プレイヤー情報
+    Player playerSc;
     public Slider energyGage; // エネルギーゲージ
 
     public Image energyFull;
@@ -39,18 +38,20 @@ public class GUIManager : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
-        player = GameObject.Find("Player").GetComponent<Player>();
-        energyGage = GameObject.Find("EnergyGage").GetComponent<Slider>();
-        energyGage.maxValue = player.maxEnergy;
+	void Start ()
+    {
+        playerSc = GameObject.FindGameObjectWithTag("Player" + MyNumber).GetComponent<Player>();
+        energyGage = GameObject.FindGameObjectWithTag("UI_EGage").GetComponent<Slider>();
+        energyGage.maxValue = playerSc.maxEnergy;
         //EnergyStatusInit();
         radioLog.CsvRead(readRadioName);
     }
 	
 	// Update is called once per frame
-	void Update () {
-        energyGage.value = player.energy;
-		
+	void Update ()
+    {
+
+        energyGage.value = playerSc.energy;	
 	}
 
     void EnergyStatusInit()
@@ -59,7 +60,7 @@ public class GUIManager : MonoBehaviour {
 
     public void DownEnergy(float downValue)
     {
-        energyFull.fillAmount = downValue / player.maxEnergy;
+        energyFull.fillAmount = downValue / playerSc.maxEnergy;
     }
 
     public void LogShow(int sendWidth,int sendHeight,int textwidth,int textheight) // 通常ログ出力メソッド

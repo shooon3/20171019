@@ -16,7 +16,8 @@ public class Player : GameManagement {
         ENERGYCHARGE = 3 // エネルギー充電
     }
 
-    public PhotonView photonview;
+    PhotonView m_photon;
+    PhotonPlayer[] photonPlayer;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
     [SerializeField] private int charactorHp = 0; // プレイヤーのHP
@@ -54,7 +55,6 @@ public class Player : GameManagement {
 
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     CharacterController cc; // キャラクターコントローラーを格納する
-    GUIManager guimanager;
     GameManagement gm;
 
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
@@ -68,23 +68,23 @@ public class Player : GameManagement {
     bool actionFlg = false;
     public bool falling = false;
 
-    PhotonPlayer[] photonPlayer = PhotonNetwork.playerList;
-
     // Use this for initialization
     void Start()
     {
         //photonViewを取得
-        photonview = GetComponent<PhotonView>();
+        m_photon = GetComponent<PhotonView>();
+        //プレイヤーリストを取得
+        photonPlayer = PhotonNetwork.playerList;
 
         //所有者が自分ではない場合処理しない
-        if (!photonview.isMine)
+        if (!m_photon.isMine)
             return;
 
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
-        guimanager = statusObj.GetComponent<GUIManager>();
+        guimanager = GetComponent<GUIManager>();
         nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
 
         CharactorSetup();
@@ -96,15 +96,18 @@ public class Player : GameManagement {
         energyText.text = "Energy："; // 残りエネルギー確認用
         mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
 
-        playerId[photonview.ownerId] = photonview.ownerId;
-        playerName[photonview.ownerId] = "Player" + photonview.ownerId;
+        citizenPlayerInfo[m_photon.ownerId] = transform.gameObject;
+
+        transform.tag = "Player" + m_photon.ownerId;
+        MyNumber = m_photon.ownerId;
+
     }
 
     // Update is called once per frame
     void Update()
     {
         //所有者が自分ではない場合処理しない
-        if (!photonview.isMine)
+        if (!m_photon.isMine)
             return;
 
         RotateView(); // カメラとキャラクターの向きを更新する
@@ -170,7 +173,7 @@ public class Player : GameManagement {
     void FixedUpdate()
     {
         //所有者が自分ではない場合処理をしない
-        if (!photonview.isMine)
+        if (!m_photon.isMine)
             return;
 
         float speed;
