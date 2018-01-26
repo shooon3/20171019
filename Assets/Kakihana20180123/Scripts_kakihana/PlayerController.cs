@@ -1,29 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GamepadInput;
 
 public class PlayerController : MonoBehaviour {
+    /*プレイヤースクリプト　2.0*/
     public enum Action // プレイヤーの行動
     {
-        NONE = 0, // 通常状態
+        NONE = 0, // 通常状態（何もしていない）
         BANKRAID = 1, // 銀行襲撃
         TAKEITEM = 2, // アイテム取得
-        ENERGYCHARGE = 3 // エネルギー充電
+        ENERGYCHARGE = 3, // エネルギー充電
+        RESCUE = 4 // 気絶したプレイヤーを復活
     }
 
-    public Animator animetor;
-    public CharacterController cc;
+    public Animator animetor; // キャラクターのアニメーター
+    public CharacterController cc; // キャラクターコントローラー
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
-    GUIManager guimanager;
-    GameManagement gm;
+    GUIManager guimanager; // GUIクラスのオブジェクト
+    GameManagement gm; // マスタークラスのオブジェクト
+    //public GamePad.Index padId;
 
     public string playerName; // プレイヤー名
     public int playerId; // プレイヤーID
-    public PhotonView myPhotonView;
-    public PhotonTransformView myPhotonTransView;
+    public int orderNum;
+    public PhotonView myPhotonView; // 自分のPhotonview
+    public PhotonTransformView myPhotonTransView; // 自分のPhotonTransformView
 
-    [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
-    [SerializeField] private int charactorHp = 0; // プレイヤーのHP
+    [SerializeField] private int playerType = 0;// プレイヤーの属性 1でガーディアン、2でミスディード
+    [SerializeField] public int charactorHp = 0; // プレイヤーのHP
     [SerializeField] private int charactorMaxHp = 0; // 最大HP
     [SerializeField] private int charactorAtk = 0; // 攻撃力
     [SerializeField] private float charactorSpeed = 0.0f; // 移動速度
@@ -31,61 +36,64 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float jumpSpeed = 10.0f; // ジャンプ移動量
     [SerializeField] private float runSpeed; // ダッシュ時のスピード
     [SerializeField] private bool dashFlg; // ダッシュしているか
-    private float originSpeed = 0.0f;
-   // [SerializeField] private MouseManager mousemanager; // マウス移動のデータ
-
+    private float originSpeed = 0.0f; // 元のキャラクタースピード
 
     [SerializeField] public int energy = 100; // スタンガン発射に必要なエネルギー
-    [SerializeField] public int maxEnergy = 100;
+    [SerializeField] public int maxEnergy = 100; // 最大エネルギー
     [SerializeField] private float bulletTimeInterval = 0.0f; // スタンガン発射間隔
     [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
-    [SerializeField] public float rotSpeed = 3.0f;
+    [SerializeField] public float rotSpeed = 3.0f; // 旋回速度
+    public float rescueTime = 0.0f;
+    public float rescueTimeLimit = 3.0f;
 
     [SerializeField] private Camera playerCam; // カメラオブジェクトを格納
     const string statusName = "Status"; // ステータスオブジェクトの名前
     private GameObject statusObj; // ステータスオブジェクトを格納する変数
     public GameObject bullet; // 弾のプレハブ
     public GameObject punch; // 素手攻撃用のプレハブ
-    public Action actionType = Action.NONE;
+    public Action actionType = Action.NONE; // 行動を保存する変数
 
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
     public Vector3 targetDirection = new Vector3(0.0f, 0.0f, 0.0f); // キャラクターの方向
-    private Vector3 originCameraPos; // 原点となるカメラ座標
-    private Vector2 charInput; // キャラクターキー入力用のベクトル
     const float gravity = 9.81f; // 重力
-    float num;
     bool isJump; // ジャンプしているか
     bool actionFlg = false; // 何か行動をしているか
     public bool falling = false; // ステージ外に居るか
+    public bool isStun = false;
+    public bool rescue = false;
 
     // Use this for initialization
     void Start () {
-        if (myPhotonView.isMine)
-        {
+        //if (myPhotonView.isMine)// 自分のキャラクターであれば実行
+        //{
             cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
             // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
             statusObj = GameObject.Find(statusName);
             charactorstatus = statusObj.GetComponent<CharactorStatus>();
             guimanager = statusObj.GetComponent<GUIManager>();
-            CharactorSetup();
-            playerCam = Camera.main; // カメラの情報を格納
-            originCameraPos = playerCam.transform.localPosition; // 原点カメラの座標をキャラクターの座標に
-        originSpeed = charactorSpeed;
-            //  mousemanager.Init(transform, playerCam.transform); // キャラクターとカメラの位置をmousemanagerに送信
 
-        }
+            CharactorSetup();// キャラクターステータスの初期設定
+            playerCam = Camera.main; // カメラの情報を格納
+            originSpeed = charactorSpeed; // 元スピードは最初に取得したスピードに
+        //}
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (!myPhotonView.isMine)
-        {
-            return;
-        }
-        MoveUpdate();
-        RotationUpdate();
+        //var Pad = GamePad.GetState(padId, false);
+        //if (!myPhotonView.isMine)// 自分のキャラクターでなければ実行されない
+        //{
+        //    return;
+        //}
 
-        cc.Move(charMove * Time.deltaTime);
+        if (!isStun)
+        {
+            MoveUpdate(); // 移動量を決めるメソッド
+        }
+        //MoveUpdate(); // 移動量を決めるメソッド
+        RotationUpdate(); // 向きを決めるメソッド
+
+        cc.Move(charMove * Time.deltaTime); // キャラクター移動
         if (actionType != Action.NONE && Input.GetKey(KeyCode.E) == true)
         {
             IsAction(actionType);
@@ -101,20 +109,29 @@ public class PlayerController : MonoBehaviour {
             MisdeedAttack(); // ミスディード攻撃用メソッド
         }
 
-        if (falling == true)
+        if (falling == true) // マップ外に落ちたら指定されている場所へワープ
         {
             Transform respawnObj = GameObject.Find("Respawn").GetComponent<Transform>();
             this.transform.position = respawnObj.transform.position;
             falling = false;
         }
 
-        if (charactorHp <= 0 && playerType == 1)
+        if (charactorHp <= 0 && playerType == 1) // ガーディアンで体力が０になったら
+        {
+            isStun = true; // 気絶メソッド
+        }
+        else
+        {
+            isStun = false;
+        }
+        if (charactorHp <= 0 && playerType == 2) // ミスディードで体力が０になったら
+        {
+            Death(); // 確保メソッド
+        }
+
+        if (isStun == true)
         {
             Stun();
-        }
-        if (charactorHp <= 0 && playerType == 2)
-        {
-            Death();
         }
 
         bulletTimeInterval -= Time.deltaTime;
@@ -133,23 +150,29 @@ public class PlayerController : MonoBehaviour {
         charactorSpeed = charactorstatus.postPlayerSpeed(playerType);
         charactorMoney = charactorstatus.postPlayerMoney(playerType);
         this.gameObject.tag = charactorstatus.postPlayertTag(playerType);
-
     }
 
     void MoveUpdate()
     {
-        float vertical = Input.GetAxis("Vertical");
-        float horizontal = Input.GetAxis("Horizontal");
-        float maxSpeed = 10.0f;
+        //var Pad = GamePad.GetState(padId, false);
+        //float vertical = Pad.LeftStickAxis.y;
+        //float horizontal = Pad.LeftStickAxis.x;
 
+        float vertical = Input.GetAxis("Vertical"); // 上下の移動量
+        float horizontal = Input.GetAxis("Horizontal"); // 左右の移動量
+        float maxSpeed = 10.0f; // 最大スピード
+        Debug.Log(vertical);
+        Debug.Log(horizontal);
+        // カメラの方向よりY成分を除いたベクトルを取得し、自分が移動する方向を決める
         Vector3 forward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1.0f, 0.0f, 1.0f));
-        Vector3 right = Camera.main.transform.right;
+        Vector3 right = Camera.main.transform.right; // カメラの右方向の向きを取得
 
+        // カメラの方向を元にキャラクターの移動方向を調整
         targetDirection = horizontal * right + vertical * forward;
 
         if (charactorSpeed >= maxSpeed)
         {
-            charactorSpeed = maxSpeed;
+            charactorSpeed = maxSpeed;// 最大スピードを超えたらスピードは最大値に固定される
         }
 
         if (cc.isGrounded)
@@ -196,7 +219,6 @@ public class PlayerController : MonoBehaviour {
             GameObject.Instantiate(punch);
             punchTimeInterval = 0.5f;
         }
-
     }
 
     void MisdeedAttack() // ミスディード攻撃メソッド
@@ -209,7 +231,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void IsAction(Action type)
+    void IsAction(Action type)// アクションメソッド
     {
         switch (actionType)
         {
@@ -264,6 +286,12 @@ public class PlayerController : MonoBehaviour {
         guimanager.LogShow(
             (int)GUIManager.SenderList.SYSTEM, 0,
             (int)GUIManager.SenderList.SYSTEM, 4);
+
+    }
+
+    void Rescue()
+    {
+
     }
 
     void Death()

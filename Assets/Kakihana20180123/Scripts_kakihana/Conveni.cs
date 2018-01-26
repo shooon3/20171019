@@ -4,8 +4,27 @@ using UnityEngine;
 
 public class Conveni : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    /*銀行ごとのクラス*/
+
+    PlayerController player;
+
+    BankManager bankmanager; // 銀行管理クラス
+    GUIManager guimanager;
+    GameObject bankmanagerObj; // 銀行管理クラスのオブジェクト
+
+    public GameObject thisConveniObj; // 自分の銀行のオブジェクト
+
+    public GameObject raidPlayerObj; // 襲撃したプレイヤーのオブジェクト
+
+    public string thisConveniId; // 自分のID
+    [SerializeField] private int haveMoney; // 所持金
+    public bool attacked = false; // 襲撃されたか
+    public bool raid = false; // 襲撃フラグ
+    public static bool raidFlg = false; // 襲撃フラグ（銀行管理クラス用
+    [SerializeField] private int getMoney; // 奪われる金額
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	

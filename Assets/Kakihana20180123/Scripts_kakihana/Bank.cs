@@ -6,20 +6,15 @@ public class Bank : MonoBehaviour {
 
     /*銀行ごとのクラス*/
 
-    Player player;
+    PlayerController player;
 
     BankManager bankmanager; // 銀行管理クラス
     GUIManager guimanager;
     GameObject bankmanagerObj; // 銀行管理クラスのオブジェクト
-    PlayerController1 playerInfo1; // プレイヤー情報
-    PlayerController2 playerInfo2;
-    PlayerController3 playerInfo3;
-    PlayerController4 playerInfo4;
 
     public GameObject thisBankObj; // 自分の銀行のオブジェクト
 
     public GameObject raidPlayerObj; // 襲撃したプレイヤーのオブジェクト
-    Component misdeedComponent;
 
     public string thisBankId; // 自分のID
     [SerializeField] private int haveMoney; // 所持金
@@ -66,7 +61,7 @@ public class Bank : MonoBehaviour {
     public void SetObj(GameObject obj)
     {
         raidPlayerObj = obj;
-        player = raidPlayerObj.GetComponent<Player>();
+        player = raidPlayerObj.GetComponent<PlayerController>();
         if (raidFlg)
         {
             Raid();
