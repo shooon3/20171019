@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour {
         CONVENIRAID = 2,
         TAKEITEM = 3, // アイテム取得
         ENERGYCHARGE = 4, // エネルギー充電
-        RESCUE = 5 // 気絶したプレイヤーを復活
+        RESCUE = 5, // 気絶したプレイヤーを復活
+        RESCUEWAIT = 6 // 復活待ち
     }
     public enum PLAYERTYPE
     {
@@ -59,6 +60,9 @@ public class PlayerController : MonoBehaviour {
     private GameObject statusObj; // ステータスオブジェクトを格納する変数
     public GameObject bullet; // 弾のプレハブ
     public GameObject punch; // 素手攻撃用のプレハブ
+    public GameObject rescueObj; // 自分の救助用当たり判定
+    public GameObject beRescueObj; // 救助するプレイヤーのオブジェクト
+    public PlayerController rescuePlayerScript; // 救助するプレイヤーのデータ
     public Action actionType = Action.NONE; // 行動を保存する変数
 
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
@@ -79,7 +83,7 @@ public class PlayerController : MonoBehaviour {
             statusObj = GameObject.Find(statusName);
             charactorstatus = statusObj.GetComponent<CharactorStatus>();
             guimanager = statusObj.GetComponent<GUIManager>();
-
+            rescueObj.SetActive(false);
             CharactorSetup();// キャラクターステータスの初期設定
             playerCam = Camera.main; // カメラの情報を格納
             originSpeed = charactorSpeed; // 元スピードは最初に取得したスピードに
@@ -252,17 +256,20 @@ public class PlayerController : MonoBehaviour {
     {
         switch (actionType)
         {
-            case Action.BANKRAID:
+            case Action.BANKRAID: // 銀行襲撃
                 Bank.raidFlg = true;
                 actionType = Action.NONE;
                 break;
-            case Action.CONVENIRAID:
+            case Action.CONVENIRAID: // コンビニ襲撃
                 Conveni.raidFlg = true;
                 actionType = Action.NONE;
                 break;
-            case Action.ENERGYCHARGE:
+            case Action.ENERGYCHARGE: // スタンガン充電
                 Charge.chargeFlg = true;
                 actionType = Action.NONE;
+                break;
+            case Action.RESCUE: // 気絶しているプレイヤーを救助
+                Rescue();
                 break;
         }
     }
@@ -289,6 +296,13 @@ public class PlayerController : MonoBehaviour {
             actionType = Action.ENERGYCHARGE;
         }
 
+        if (col.gameObject.tag == "Rescue" && playerType == (int)PLAYERTYPE.GUARDIAN)
+        {
+            actionType = Action.RESCUE; 
+            beRescueObj = col.gameObject;
+            rescuePlayerScript = beRescueObj.GetComponent<PlayerController>();
+        }
+
         if (col.gameObject.tag == "Under")
         {
             falling = true;
@@ -310,20 +324,38 @@ public class PlayerController : MonoBehaviour {
         {
             actionType = Action.NONE;
         }
+        if (col.gameObject.tag == "Rescue" && actionType == Action.RESCUE)
+        {
+            actionType = Action.NONE;
+        }
     }
 
     void Stun() // 気絶メソッド
     {
+        rescueObj.SetActive(true); // 救助用当たり判定を表示
+        actionType = Action.RESCUEWAIT; // 行動は気絶待ち状態に
         guimanager.LogShow(
             (int)GUIManager.SenderList.SYSTEM, 0,
-            (int)GUIManager.SenderList.SYSTEM, 4);
-        gm.isStun[orderNum] = true;
+            (int)GUIManager.SenderList.SYSTEM, 4); // 気絶ログを表示
+        gm.isStun[orderNum] = true; // マスタークラスに気絶状態を送信
     }
 
-    void Rescue() // 救出メソッド
+    void IsRescue() // 救助メソッド
     {
-        isStun = false;
-        gm.isStun[orderNum] = false;
+        rescuePlayerScript.Rescue(); // 救助される側は救助メソッドを起動
+        actionType = Action.NONE; // 自分の行動状態を通常に
+    }
+
+    public void Rescue() // 救出メソッド
+    {
+        if (actionType == Action.RESCUEWAIT) // 救助待ちなら
+        {
+            charactorHp = charactorMaxHp; // 自分のHPを回復
+            actionType = Action.NONE; // 通常状態に
+            isStun = false; // 気絶を解除
+            gm.isStun[orderNum] = false; // マスタークラスに気絶解除を送信
+            rescueObj.SetActive(false); // 救助用当たり判定を非表示に
+        }
     }
 
     void Death() // 確保メソッド
