@@ -13449,6 +13449,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   guimanager: {fileID: 0}
+  MyNumber: 0
   playerId: 00000000000000000000000000000000
   playerName:
   - 
@@ -13467,6 +13468,7 @@ MonoBehaviour:
   isRaid: 
   respawn: 
   startFlg: 0
+  m_photon_manege: {fileID: 0}
 --- !u!4 &1757056520
 Transform:
   m_ObjectHideFlags: 0
@@ -13517,9 +13519,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd338584be5a8a142aa1e6bc8a706e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  citizenPlayerInfo: []
+  terroPlayerInfo: []
+  guimanager: {fileID: 0}
+  MyNumber: 0
+  playerId: 
+  playerName: []
+  playerHp: 
+  areyouTerrorist: 
+  citizenGroupMoney: 0
+  terroGroupMoney: 0
+  count: 0
+  logCount: 0
+  startCount: 0
+  isStun: 
+  isArrest: 
+  isRaid: 
+  respawn: 
+  startFlg: 0
+  m_photon_manege: {fileID: 0}
+  energyGage: {fileID: 0}
   energyFull: {fileID: 0}
   energyCaution: {fileID: 0}
   energyDanger: {fileID: 0}
+  content: {fileID: 0}
+  originElement: {fileID: 0}
+  originText: {fileID: 0}
+  input: {fileID: 0}
   readRadioName: 
 --- !u!4 &1759987628 stripped
 Transform:
@@ -13986,7 +14012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000003322959}
+  m_AnchoredPosition: {x: 0, y: 0.0000030845404}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1001 &1839963121

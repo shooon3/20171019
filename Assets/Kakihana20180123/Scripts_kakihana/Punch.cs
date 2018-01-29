@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Punch : MonoBehaviour {
+public class Punch : MonoBehaviour
+{
 
     Transform playerTransform; // プレイヤーの座標
     GameObject playerObj;//プレイヤーのオブジェクト

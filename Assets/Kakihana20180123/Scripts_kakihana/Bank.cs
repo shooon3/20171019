@@ -39,7 +39,7 @@ public class Bank : MonoBehaviour {
             player.GetMoney(getMoney);
             guimanager.PlayerInfulenceLogShow(
                 (int)GUIManager.SenderList.SYSTEM, 0,
-                player.photonview.owner.NickName,
+                player.m_photon.owner.NickName,
                 (int)GUIManager.SenderList.SYSTEM, 4,
                 getMoney,
                 (int)GUIManager.SenderList.SYSTEM, 5

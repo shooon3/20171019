@@ -27,6 +27,7 @@ public class manage : Photon.MonoBehaviour
     void OnJoinedLobby()
     {
         Debug.Log("On Joined Lobby");
+        PhotonNetwork.JoinRandomRoom();
     }
 
     //ルームへ入室した
@@ -51,16 +52,5 @@ public class manage : Photon.MonoBehaviour
     void InstantiatePlayerObject()
     {
         PhotonNetwork.Instantiate("Player", room.position + InstancePos, Quaternion.identity, 0);
-    }
-
-    public void OnClickJoin()
-    {
-        //ルームへ接続する
-        PhotonNetwork.JoinRandomRoom();
-    }
-
-    public void OnClickSpawn()
-    {
-
     }
 }

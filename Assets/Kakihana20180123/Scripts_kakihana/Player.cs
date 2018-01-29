@@ -16,7 +16,7 @@ public class Player : GameManagement {
         ENERGYCHARGE = 3 // エネルギー充電
     }
 
-    PhotonView m_photon;
+    public PhotonView m_photon;
     PhotonPlayer[] photonPlayer;
 
     [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
@@ -140,8 +140,9 @@ public class Player : GameManagement {
 
         if (Input.GetButtonDown("Fire1") && playerType ==1)
         {
-            PlayerAttack(); // 市民の攻撃用メソッド
-        }else if(Input.GetButtonDown("Fire1")&& playerType == 2)
+            m_photon.RPC("PlayerAttack",PhotonTargets.AllViaServer,) // 市民の攻撃用メソッド
+        }
+        else if(Input.GetButtonDown("Fire1")&& playerType == 2)
         {
             mouseclickPos = Input.mousePosition;
             mouseclickPos.z = 5.0f;
