@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,7 @@ public class GUIManager : GameManagement
     [SerializeField] private Text originText; // 生成するテキスト
     [SerializeField] private InputField input; // 入力用テキスト
 
-    public string readRadioName; // 参照するCSVファイル名
+    [NonSerialized] public string readRadioName; // 参照するCSVファイル名
     ActionLog radioLog = new ActionLog(); // 参照するCSV読み込みスクリプト
 
     void Awake()
@@ -37,20 +38,22 @@ public class GUIManager : GameManagement
         input.image.color = new Color(0, 0, 0, 0); 
     }
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
-        playerSc = GameObject.FindGameObjectWithTag("Player" + MyNumber).GetComponent<Player>();
-        energyGage = GameObject.FindGameObjectWithTag("UI_EGage").GetComponent<Slider>();
-        energyGage.maxValue = playerSc.maxEnergy;
-        //EnergyStatusInit();
-        radioLog.CsvRead(readRadioName);
+       
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-
+        if (playerSc == null)
+        {
+            playerSc = GameObject.Find("Player" + MyNumber).GetComponent<Player>();
+            energyGage.maxValue = playerSc.maxEnergy;
+            //EnergyStatusInit();
+            radioLog.CsvRead(readRadioName);
+        }
         energyGage.value = playerSc.energy;	
 	}
 

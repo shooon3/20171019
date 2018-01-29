@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : GameManagement {
+public class Player : GameManagement
+{
     /* プレイヤークラス */
     /* StandardAssetsのFPSControllerを基に作成*/
     /* カメラの向きに合わせて移動する*/
@@ -16,18 +18,18 @@ public class Player : GameManagement {
         ENERGYCHARGE = 3 // エネルギー充電
     }
 
-    public PhotonView m_photon;
-    PhotonPlayer[] photonPlayer;
+    [NonSerialized] public PhotonView m_photon;
+    private PhotonPlayer[] photonPlayer;
 
-    [SerializeField] private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
-    [SerializeField] private int charactorHp = 0; // プレイヤーのHP
-    [SerializeField] private int charactorMaxHp = 0; // 最大HP
-    [SerializeField] private int charactorAtk = 0; // 攻撃力
-    [SerializeField] private float charactorSpeed = 0.0f; // 移動速度
-    [SerializeField] private float charactorMoney; // 所持金
-    [SerializeField] private float jumpSpeed = 10.0f; // ジャンプ移動量
-    [SerializeField] private float runSpeed = 0.0f; // ダッシュ時のスピード
-    [SerializeField] private bool dashFlg; // ダッシュしているか
+    private int playerType = 0;// プレイヤーの属性 1で市民、2でテロリスト
+    private int charactorHp = 0; // プレイヤーのHP
+    private int charactorMaxHp = 0; // 最大HP
+    private int charactorAtk = 0; // 攻撃力
+    private float charactorSpeed = 0.0f; // 移動速度
+    private float charactorMoney; // 所持金
+    private float jumpSpeed = 10.0f; // ジャンプ移動量
+    private float runSpeed = 0.0f; // ダッシュ時のスピード
+    private bool dashFlg; // ダッシュしているか
 
     [SerializeField] private MouseManager mousemanager; // マウス移動のデータ
     [SerializeField] private Curve headCurve; // カメラの上下移動のデータ
@@ -38,17 +40,17 @@ public class Player : GameManagement {
     [SerializeField] private float bulletTimeInterval = 0.0f; // スタンガン発射間隔
     [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
 
-    [SerializeField] Camera playerCam; // カメラオブジェクトを格納
+    [NonSerialized] Camera playerCam; // カメラオブジェクトを格納
 
     const string statusName = "Status"; // ステータスオブジェクトの名前
     private GameObject statusObj; // ステータスオブジェクトを格納する変数
-    public GameObject bullet; // 弾のプレハブ
-    public GameObject fire; // 攻撃用のプレハブ（何に使うかは未定）
-    public GameObject punch; // 素手攻撃用のプレハブ
-    [SerializeField] GameObject nameLabel;
-    public Text energyText;
-    public Text raidText;
-    public Text chargeText;
+    [NonSerialized] public GameObject bullet; // 弾のプレハブ
+    [NonSerialized] public GameObject fire; // 攻撃用のプレハブ（何に使うかは未定）
+    [NonSerialized] public GameObject punch; // 素手攻撃用のプレハブ
+    //[NonSerialized] GameObject nameLabel;
+    private Text energyText;
+    private Text raidText;
+    private Text chargeText;
 
     CollisionFlags charCollFlg; // キャラクター衝突フラグ
     public Action actionType = Action.NONE;
@@ -80,12 +82,15 @@ public class Player : GameManagement {
         if (!m_photon.isMine)
             return;
 
+        energyText = GameObject.Find("E_Text").GetComponent<Text>();
+        raidText = GameObject.Find("Raid").GetComponent<Text>();
+        chargeText = GameObject.Find("Charge").GetComponent<Text>();
         cc = GetComponent<CharacterController>(); // キャラクターコントローラーコンポーネントを取得
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
         guimanager = GetComponent<GUIManager>();
-        nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
+        //nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
 
         CharactorSetup();
         raidText.enabled = false;
@@ -98,9 +103,10 @@ public class Player : GameManagement {
 
         citizenPlayerInfo[m_photon.ownerId] = transform.gameObject;
 
-        transform.tag = "Player" + m_photon.ownerId;
+        //photon上のNickNameとシーン上の名前とidをオーナーIDから明記
+        PhotonNetwork.playerName = "Player" + m_photon.ownerId;
+        transform.name = "Player" + m_photon.ownerId;
         MyNumber = m_photon.ownerId;
-
     }
 
     // Update is called once per frame

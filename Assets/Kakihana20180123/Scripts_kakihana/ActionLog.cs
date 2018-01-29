@@ -4,7 +4,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActionLog : MonoBehaviour {
+public class ActionLog : MonoBehaviour
+{
     /*ログ表示用のCSVファイルを格納するクラス*/
 
     public List<string[]> radioCsvDatas = new List<string[]>();
