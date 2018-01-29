@@ -9,9 +9,15 @@ public class PlayerController : MonoBehaviour {
     {
         NONE = 0, // 通常状態（何もしていない）
         BANKRAID = 1, // 銀行襲撃
-        TAKEITEM = 2, // アイテム取得
-        ENERGYCHARGE = 3, // エネルギー充電
-        RESCUE = 4 // 気絶したプレイヤーを復活
+        CONVENIRAID = 2,
+        TAKEITEM = 3, // アイテム取得
+        ENERGYCHARGE = 4, // エネルギー充電
+        RESCUE = 5 // 気絶したプレイヤーを復活
+    }
+    public enum PLAYERTYPE
+    {
+        GUARDIAN = 1,
+        MISDEED = 2
     }
 
     public Animator animetor; // キャラクターのアニメーター
@@ -27,7 +33,7 @@ public class PlayerController : MonoBehaviour {
     public PhotonView myPhotonView; // 自分のPhotonview
     public PhotonTransformView myPhotonTransView; // 自分のPhotonTransformView
 
-    [SerializeField] private int playerType = 0;// プレイヤーの属性 1でガーディアン、2でミスディード
+    [SerializeField] private int playerType = (int)PLAYERTYPE.MISDEED;// プレイヤーの属性 1でガーディアン、2でミスディード
     [SerializeField] public int charactorHp = 0; // プレイヤーのHP
     [SerializeField] private int charactorMaxHp = 0; // 最大HP
     [SerializeField] private int charactorAtk = 0; // 攻撃力
@@ -45,6 +51,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] public float rotSpeed = 3.0f; // 旋回速度
     public float rescueTime = 0.0f;
     public float rescueTimeLimit = 3.0f;
+    public float actionTime = 0.0f;
+    public float actionTimeLimit = 3.0f;
 
     [SerializeField] private Camera playerCam; // カメラオブジェクトを格納
     const string statusName = "Status"; // ステータスオブジェクトの名前
@@ -96,15 +104,24 @@ public class PlayerController : MonoBehaviour {
         cc.Move(charMove * Time.deltaTime); // キャラクター移動
         if (actionType != Action.NONE && Input.GetKey(KeyCode.E) == true)
         {
-            IsAction(actionType);
-            Debug.Log("アクション呼び出し");
+            actionTime += Time.deltaTime;
+            if (actionTime > actionTimeLimit)
+            {
+                IsAction(actionType);
+                Debug.Log("アクション呼び出し");
+                actionTime = 0.0f;
+            }
+        }
+        else
+        {
+            actionTime = 0.0f;
         }
 
-        if (Input.GetButtonDown("Fire1") && playerType == 1)
+        if (Input.GetButtonDown("Fire1") && playerType == (int)PLAYERTYPE.GUARDIAN)
         {
             GuardianAttack(); // ガーディアン攻撃用メソッド
         }
-        else if (Input.GetButtonDown("Fire1") && playerType == 2)
+        else if (Input.GetButtonDown("Fire1") && playerType == (int)PLAYERTYPE.MISDEED)
         {
             MisdeedAttack(); // ミスディード攻撃用メソッド
         }
@@ -116,7 +133,7 @@ public class PlayerController : MonoBehaviour {
             falling = false;
         }
 
-        if (charactorHp <= 0 && playerType == 1) // ガーディアンで体力が０になったら
+        if (charactorHp <= 0 && playerType == (int)PLAYERTYPE.GUARDIAN) // ガーディアンで体力が０になったら
         {
             isStun = true; // 気絶メソッド
         }
@@ -124,7 +141,7 @@ public class PlayerController : MonoBehaviour {
         {
             isStun = false;
         }
-        if (charactorHp <= 0 && playerType == 2) // ミスディードで体力が０になったら
+        if (charactorHp <= 0 && playerType == (int)PLAYERTYPE.MISDEED) // ミスディードで体力が０になったら
         {
             Death(); // 確保メソッド
         }
@@ -239,6 +256,10 @@ public class PlayerController : MonoBehaviour {
                 Bank.raidFlg = true;
                 actionType = Action.NONE;
                 break;
+            case Action.CONVENIRAID:
+                Conveni.raidFlg = true;
+                actionType = Action.NONE;
+                break;
             case Action.ENERGYCHARGE:
                 Charge.chargeFlg = true;
                 actionType = Action.NONE;
@@ -251,14 +272,19 @@ public class PlayerController : MonoBehaviour {
         charactorMoney += money;
     }
 
-    void OnTriggerEnter(Collider col)
+    void OnTriggerEnter(Collider col) // 当たったオブジェクトにより行動を起こす
     {
-        if (col.gameObject.tag == "Bank")
+        if (col.gameObject.tag == "Bank" && playerType == (int)PLAYERTYPE.MISDEED)
         {
             actionType = Action.BANKRAID;
         }
 
-        if (col.gameObject.tag == "Charge")
+        if (col.gameObject.tag == "Conveni" && playerType == (int)PLAYERTYPE.MISDEED)
+        {
+            actionType = Action.CONVENIRAID;
+        }
+
+        if (col.gameObject.tag == "Charge" && playerType == 2)
         {
             actionType = Action.ENERGYCHARGE;
         }
@@ -269,7 +295,7 @@ public class PlayerController : MonoBehaviour {
         }
 
     }
-    void OnTriggerExit(Collider col)
+    void OnTriggerExit(Collider col) // 行動を起こすオブジェクトから離れたら行動状態を解除
     {
         if (col.gameObject.tag == "Bank" && actionType == Action.BANKRAID)
         {
@@ -279,22 +305,28 @@ public class PlayerController : MonoBehaviour {
         {
             actionType = Action.NONE;
         }
+
+        if (col.gameObject.tag == "Conveni" && actionType == Action.CONVENIRAID)
+        {
+            actionType = Action.NONE;
+        }
     }
 
-    void Stun()
+    void Stun() // 気絶メソッド
     {
         guimanager.LogShow(
             (int)GUIManager.SenderList.SYSTEM, 0,
             (int)GUIManager.SenderList.SYSTEM, 4);
-
+        gm.isStun[orderNum] = true;
     }
 
-    void Rescue()
+    void Rescue() // 救出メソッド
     {
-
+        isStun = false;
+        gm.isStun[orderNum] = false;
     }
 
-    void Death()
+    void Death() // 確保メソッド
     {
 
     }

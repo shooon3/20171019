@@ -35,6 +35,11 @@ public class Bank : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (raidFlg)
+        {
+            Raid();
+            raidFlg = false;
+        }
         if (raid == true)
         {
             getMoney = thisBankRaid();
@@ -45,7 +50,7 @@ public class Bank : MonoBehaviour {
                 player.playerName,
                 (int)GUIManager.SenderList.SYSTEM, 4,
                 getMoney,
-                (int)GUIManager.SenderList.SYSTEM, 5
+                (int)GUIManager.SenderList.SYSTEM, 6
                 );
             raid = false;
         }
@@ -62,10 +67,6 @@ public class Bank : MonoBehaviour {
     {
         raidPlayerObj = obj;
         player = raidPlayerObj.GetComponent<PlayerController>();
-        if (raidFlg)
-        {
-            Raid();
-        }
     }
 
     public void Raid()
@@ -75,10 +76,9 @@ public class Bank : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Terrorist")
+        if (col.gameObject.tag == "Misdeed")
         {
             SetObj(col.gameObject);
-            Debug.Log("テロリスト侵入");
         }
 
     }

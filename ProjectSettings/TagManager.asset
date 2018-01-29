@@ -13,6 +13,7 @@ TagManager:
   - GameMaster
   - Misdeed
   - Guardian
+  - Conveni
   layers:
   - Default
   - TransparentFX

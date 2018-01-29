@@ -93,8 +93,8 @@ public class GameManagement : MonoBehaviour {
     public void PlayerInfoInit()
     {
         playerObj[0] = GameObject.Find("Player");
-        playerInfo[0] = player1.GetComponent<PlayerController>();
-        playerTrans1 = player1.transform;
+        playerInfo[0] = playerObj[0].GetComponent<PlayerController>();
+        playerTrans1 = playerInfo[0].transform;
         playerId[0] = playerInfo[0].playerId;
         playerName[0] = playerInfo[0].playerName;
         playerHp[0] = playerInfo[0].charactorHp;
