@@ -140,7 +140,7 @@ public class Player : GameManagement {
 
         if (Input.GetButtonDown("Fire1") && playerType ==1)
         {
-            m_photon.RPC("PlayerAttack",PhotonTargets.AllViaServer,) // 市民の攻撃用メソッド
+            m_photon.RPC("PlayerAttack", PhotonTargets.AllViaServer); // 市民の攻撃用メソッド
         }
         else if(Input.GetButtonDown("Fire1")&& playerType == 2)
         {
