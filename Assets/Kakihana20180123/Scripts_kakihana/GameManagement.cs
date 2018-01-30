@@ -7,11 +7,9 @@ public class GameManagement : MonoBehaviour {
     /*共有したいゲーム情報を管理するクラス*/
     const int PLAYER_PEOPLE = 4; // プレイヤー人数
 
-    public GameObject player1, player2, player3, player4;
-    public GameObject[] playerObj = new GameObject[PLAYER_PEOPLE];
-    public Transform playerTrans1, playerTrans2, playerTrans3, playerTrans4;
-    public GameObject Guardian1, Guardian2, Guardian3;
-    public GameObject Misdeed1;
+    public GameObject[] playerObj = new GameObject[PLAYER_PEOPLE]; // 参照するプレイヤー
+    public GameObject[] uniqueObj = new GameObject[PLAYER_PEOPLE]; // プレイヤーを識別するための子オブジェクト
+    public Transform[] playerTrans = new Transform[PLAYER_PEOPLE]; // プレイヤーの座標
     [SerializeField]
     private PlayerController[] playerInfo = new PlayerController[PLAYER_PEOPLE];
     GUIManager guimanager;
@@ -90,35 +88,84 @@ public class GameManagement : MonoBehaviour {
 		
 	}
 
-    public void PlayerInfoInit()
+    public void PlayerInfoInit() // ユニークオブジェクトより各プレイヤーの情報を格納
     {
-        playerObj[0] = GameObject.Find("Player");
-        playerInfo[0] = playerObj[0].GetComponent<PlayerController>();
-        playerTrans1 = playerInfo[0].transform;
-        playerId[0] = playerInfo[0].playerId;
-        playerName[0] = playerInfo[0].playerName;
-        playerHp[0] = playerInfo[0].charactorHp;
-
-        if (playerInfo[0].tag == "Misdeed")
+        int i = 0;
+        for (i = 0; i < PLAYER_PEOPLE; i++)
         {
-            areyouMisdeed[0] = true;
-            isStun[0] = false;
-            isArrest[0] = false;
-            isRaid[0] = false;
-            isStun[0] = false;
-            rescue[0] = false;
+            switch (i)
+            {
+                case 0:
+                    uniqueObj[i] = GameObject.Find("UniqueNo1");
+                    break;
+                case 1:
+                    uniqueObj[i] = GameObject.Find("UniqueNo2");
+                    break;
+                case 2:
+                    uniqueObj[i] = GameObject.Find("UniqueNo3");
+                    break;
+                case 3:
+                    uniqueObj[i] = GameObject.Find("UniqueNo4");
+                    break;
+            }
+            playerObj[i] = uniqueObj[i].transform.parent.gameObject;
+            playerInfo[i] = playerObj[i].GetComponent<PlayerController>();
+            playerTrans[i] = playerInfo[i].transform;
+            playerId[i] = playerInfo[i].playerId;
+            playerName[i] = playerInfo[i].playerName;
+            playerHp[i] = playerInfo[i].charactorHp;
+            if (playerInfo[i].tag == "Misdeed")
+            {
+                areyouMisdeed[i] = true;
+                isStun[i] = false;
+                isArrest[i] = false;
+                isRaid[i] = false;
+                isStun[i] = false;
+                rescue[i] = false;
+            }
+            else if (playerInfo[i].tag == "Gurdian")
+            {
+                areyouMisdeed[i] = false;
+                isStun[i] = false;
+                isArrest[i] = false;
+                isRaid[i] = false;
+                isStun[i] = false;
+                rescue[i] = false;
+            }
+            playerInfo[i].orderNum = i;
         }
-        else if(playerInfo[0].tag == "Gurdian")
-        {
-            areyouMisdeed[0] = false;
-            isStun[0] = false;
-            isArrest[0] = false;
-            isRaid[0] = false;
-            isStun[0] = false;
-            rescue[0] = false;
-        }
-        playerInfo[0].orderNum = 0;
     }
+
+    //public void PlayerInfoInit()
+    //{
+    //    uniqueObj[0] = GameObject.Find("UniqueNo1");
+    //    playerObj[0] = uniqueObj[0].transform.parent.gameObject;
+    //    playerInfo[0] = playerObj[0].GetComponent<PlayerController>();
+    //    playerTrans[0] = playerInfo[0].transform;
+    //    playerId[0] = playerInfo[0].playerId;
+    //    playerName[0] = playerInfo[0].playerName;
+    //    playerHp[0] = playerInfo[0].charactorHp;
+
+    //    if (playerInfo[0].tag == "Misdeed")
+    //    {
+    //        areyouMisdeed[0] = true;
+    //        isStun[0] = false;
+    //        isArrest[0] = false;
+    //        isRaid[0] = false;
+    //        isStun[0] = false;
+    //        rescue[0] = false;
+    //    }
+    //    else if(playerInfo[0].tag == "Gurdian")
+    //    {
+    //        areyouMisdeed[0] = false;
+    //        isStun[0] = false;
+    //        isArrest[0] = false;
+    //        isRaid[0] = false;
+    //        isStun[0] = false;
+    //        rescue[0] = false;
+    //    }
+    //    playerInfo[0].orderNum = 0;
+    //}
 
     public void StunManager(int orderNum)
     {
