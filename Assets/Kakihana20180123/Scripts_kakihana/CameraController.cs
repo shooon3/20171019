@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : GameManagement {
 
     private const float Y_ANGLE_MIN = -89.0f;
     private const float Y_ANGLE_MAX = 89.0f;
 
+    private const float X_ANGLE_MIN = -45.0f;
+    private const float X_ANGLE_MAX = 45.0f;
+
     public Transform target;
+    public PlayerController player;
     public Vector3 offset;
     private Vector3 lookAt;
 
@@ -40,6 +44,7 @@ public class CameraController : MonoBehaviour {
         {
             currentX += Input.GetAxis("Mouse X") * XSensitivity;
             currentY += Input.GetAxis("Mouse Y") * YSensitivity;
+            currentX = Mathf.Clamp(currentX, X_ANGLE_MIN, X_ANGLE_MAX);
             currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
         }
         distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel"), distance_Min, distance_Max);
