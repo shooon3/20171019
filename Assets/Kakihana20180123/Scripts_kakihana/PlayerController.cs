@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
         RESCUE = 5, // 気絶したプレイヤーを復活
         RESCUEWAIT = 6 // 復活待ち
     }
-    public enum PLAYERTYPE
+    public enum PLAYERTYPE // 自分の所属
     {
         GUARDIAN = 1,
         MISDEED = 2
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     GUIManager guimanager; // GUIクラスのオブジェクト
     GameManagement gm; // マスタークラスのオブジェクト
-    //public GamePad.Index padId;
+    public GamePad.Index padId;
 
     public string playerName; // プレイヤー名
     public int playerId; // プレイヤーID
@@ -175,12 +175,12 @@ public class PlayerController : MonoBehaviour {
 
     void MoveUpdate()
     {
-        //var Pad = GamePad.GetState(padId, false);
-        //float vertical = Pad.LeftStickAxis.y;
-        //float horizontal = Pad.LeftStickAxis.x;
+        var Pad = GamePad.GetState(padId, false);
+        float vertical = Pad.LeftStickAxis.y;
+        float horizontal = Pad.LeftStickAxis.x;
 
-        float vertical = Input.GetAxis("Vertical"); // 上下の移動量
-        float horizontal = Input.GetAxis("Horizontal"); // 左右の移動量
+        //float vertical = Input.GetAxis("Vertical"); // 上下の移動量
+        //float horizontal = Input.GetAxis("Horizontal"); // 左右の移動量
         float maxSpeed = 10.0f; // 最大スピード
         Debug.Log(vertical);
         Debug.Log(horizontal);
@@ -301,6 +301,19 @@ public class PlayerController : MonoBehaviour {
             actionType = Action.RESCUE; 
             beRescueObj = col.gameObject;
             rescuePlayerScript = beRescueObj.GetComponent<PlayerController>();
+        }
+
+        if (col.gameObject.tag == "Bullet" && playerType == (int)PLAYERTYPE.GUARDIAN)
+        {
+            int damage = -80;
+            charactorHp -= damage;
+            Destroy(col);
+        }
+
+        if (col.gameObject.tag == "Punch" && playerType == (int)PLAYERTYPE.MISDEED)
+        {
+            int damage = -20;
+            charactorHp -= damage;
         }
 
         if (col.gameObject.tag == "Under")

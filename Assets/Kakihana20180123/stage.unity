@@ -2962,6 +2962,11 @@ Prefab:
       propertyPath: padId
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114907272061653714, guid: 9bd0052639b9616489466217494c0f9a,
+        type: 2}
+      propertyPath: rescueObj
+      value: 
+      objectReference: {fileID: 1765299572}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bd0052639b9616489466217494c0f9a, type: 2}
   m_IsPrefabParent: 0
@@ -6943,7 +6948,7 @@ Prefab:
     - target: {fileID: 224553080949606370, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224571625072574664, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
@@ -6968,12 +6973,12 @@ Prefab:
     - target: {fileID: 224471008064778076, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224249720298059636, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224258608041565712, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
@@ -7018,7 +7023,7 @@ Prefab:
     - target: {fileID: 224244524603582550, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.03829956
+      value: -1.0957832
       objectReference: {fileID: 0}
     - target: {fileID: 224018060399264268, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
@@ -7063,17 +7068,17 @@ Prefab:
     - target: {fileID: 224538029636751050, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224218061916295922, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.057743073
+      value: 0.14843369
       objectReference: {fileID: 0}
     - target: {fileID: 224218061916295922, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.05774351
+      value: 0.14843397
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4b8465909f2d8a49b70e0923eb16d7a, type: 2}
@@ -13506,7 +13511,7 @@ GameObject:
   - component: {fileID: 1765299574}
   m_Layer: 0
   m_Name: Rescue
-  m_TagString: Untagged
+  m_TagString: Rescue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

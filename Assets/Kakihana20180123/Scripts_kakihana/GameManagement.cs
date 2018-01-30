@@ -125,14 +125,6 @@ public class GameManagement : MonoBehaviour {
         isStun[orderNum] = true;
     }
 
-    public void Rescue(Transform orderNum,float rescueTime)
-    {
-        if (orderNum.transform.position.magnitude <= )
-        {
-
-        }
-    }
-
     public void GameFinish()
     {
 
