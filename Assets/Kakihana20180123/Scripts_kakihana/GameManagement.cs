@@ -125,7 +125,17 @@ public class GameManagement : MonoBehaviour {
         isStun[orderNum] = true;
     }
 
-    public void GameFinish()
+    public void GameFinish() // 引き分けメソッド
+    {
+
+    }
+
+    public void ArrestFinish() // ガーディアン勝利メソッド
+    {
+
+    }
+
+    public void EscapeFinish() // ミスディード勝利メソッド
     {
 
     }

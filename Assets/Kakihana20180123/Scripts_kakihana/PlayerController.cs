@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
     {
         NONE = 0, // 通常状態（何もしていない）
         BANKRAID = 1, // 銀行襲撃
-        CONVENIRAID = 2,
+        CONVENIRAID = 2, // コンビニ襲撃
         TAKEITEM = 3, // アイテム取得
         ENERGYCHARGE = 4, // エネルギー充電
         RESCUE = 5, // 気絶したプレイヤーを復活
@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour {
     }
     public enum PLAYERTYPE // 自分の所属
     {
-        GUARDIAN = 1,
-        MISDEED = 2
+        GUARDIAN = 1, // ガーディアン
+        MISDEED = 2 // ミスディード
     }
 
     public Animator animetor; // キャラクターのアニメーター
@@ -26,11 +26,11 @@ public class PlayerController : MonoBehaviour {
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     GUIManager guimanager; // GUIクラスのオブジェクト
     GameManagement gm; // マスタークラスのオブジェクト
-    public GamePad.Index padId;
+    //public GamePad.Index padId;
 
     public string playerName; // プレイヤー名
     public int playerId; // プレイヤーID
-    public int orderNum;
+    public int orderNum; // ゲームマスタークラスが識別するための番号
     public PhotonView myPhotonView; // 自分のPhotonview
     public PhotonTransformView myPhotonTransView; // 自分のPhotonTransformView
 
@@ -98,11 +98,11 @@ public class PlayerController : MonoBehaviour {
         //    return;
         //}
 
-        if (!isStun)
-        {
-            MoveUpdate(); // 移動量を決めるメソッド
-        }
-        //MoveUpdate(); // 移動量を決めるメソッド
+        //if (actionType == Action.NONE)// 何も行動していなければ
+        //{
+        //    MoveUpdate(); // 移動量を決めるメソッド
+        //}
+        MoveUpdate(); // 移動量を決めるメソッド
         RotationUpdate(); // 向きを決めるメソッド
 
         cc.Move(charMove * Time.deltaTime); // キャラクター移動
@@ -175,15 +175,15 @@ public class PlayerController : MonoBehaviour {
 
     void MoveUpdate()
     {
-        var Pad = GamePad.GetState(padId, false);
-        float vertical = Pad.LeftStickAxis.y;
-        float horizontal = Pad.LeftStickAxis.x;
+        //var Pad = GamePad.GetState(padId, false);
+        //float vertical = Pad.LeftStickAxis.y;
+        //float horizontal = Pad.LeftStickAxis.x;
 
-        //float vertical = Input.GetAxis("Vertical"); // 上下の移動量
-        //float horizontal = Input.GetAxis("Horizontal"); // 左右の移動量
+        float vertical = Input.GetAxis("Vertical"); // 上下の移動量
+        float horizontal = Input.GetAxis("Horizontal"); // 左右の移動量
         float maxSpeed = 10.0f; // 最大スピード
-        Debug.Log(vertical);
-        Debug.Log(horizontal);
+        //Debug.Log(vertical);
+        //Debug.Log(horizontal);
         // カメラの方向よりY成分を除いたベクトルを取得し、自分が移動する方向を決める
         Vector3 forward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1.0f, 0.0f, 1.0f));
         Vector3 right = Camera.main.transform.right; // カメラの右方向の向きを取得
@@ -279,6 +279,39 @@ public class PlayerController : MonoBehaviour {
         charactorMoney += money;
     }
 
+    void Stun() // 気絶メソッド
+    {
+        rescueObj.SetActive(true); // 救助用当たり判定を表示
+        actionType = Action.RESCUEWAIT; // 行動は気絶待ち状態に
+        guimanager.LogShow(
+            (int)GUIManager.SenderList.SYSTEM, 0,
+            (int)GUIManager.SenderList.SYSTEM, 4); // 気絶ログを表示
+        gm.isStun[orderNum] = true; // マスタークラスに気絶状態を送信
+    }
+
+    void IsRescue() // 救助メソッド
+    {
+        rescuePlayerScript.Rescue(); // 救助される側は救助メソッドを起動
+        actionType = Action.NONE; // 自分の行動状態を通常に
+    }
+
+    public void Rescue() // 救出メソッド
+    {
+        if (actionType == Action.RESCUEWAIT) // 救助待ちなら
+        {
+            charactorHp = charactorMaxHp; // 自分のHPを回復
+            actionType = Action.NONE; // 通常状態に
+            isStun = false; // 気絶を解除
+            gm.isStun[orderNum] = false; // マスタークラスに気絶解除を送信
+            rescueObj.SetActive(false); // 救助用当たり判定を非表示に
+        }
+    }
+
+    void Death() // 確保メソッド
+    {
+
+    }
+
     void OnTriggerEnter(Collider col) // 当たったオブジェクトにより行動を起こす
     {
         if (col.gameObject.tag == "Bank" && playerType == (int)PLAYERTYPE.MISDEED)
@@ -343,42 +376,12 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void Stun() // 気絶メソッド
-    {
-        rescueObj.SetActive(true); // 救助用当たり判定を表示
-        actionType = Action.RESCUEWAIT; // 行動は気絶待ち状態に
-        guimanager.LogShow(
-            (int)GUIManager.SenderList.SYSTEM, 0,
-            (int)GUIManager.SenderList.SYSTEM, 4); // 気絶ログを表示
-        gm.isStun[orderNum] = true; // マスタークラスに気絶状態を送信
-    }
 
-    void IsRescue() // 救助メソッド
-    {
-        rescuePlayerScript.Rescue(); // 救助される側は救助メソッドを起動
-        actionType = Action.NONE; // 自分の行動状態を通常に
-    }
-
-    public void Rescue() // 救出メソッド
-    {
-        if (actionType == Action.RESCUEWAIT) // 救助待ちなら
-        {
-            charactorHp = charactorMaxHp; // 自分のHPを回復
-            actionType = Action.NONE; // 通常状態に
-            isStun = false; // 気絶を解除
-            gm.isStun[orderNum] = false; // マスタークラスに気絶解除を送信
-            rescueObj.SetActive(false); // 救助用当たり判定を非表示に
-        }
-    }
-
-    void Death() // 確保メソッド
-    {
-
-    }
 
     private void DebugTest() // デバッグ用メソッド
     {
     }
+
 
 
 }
