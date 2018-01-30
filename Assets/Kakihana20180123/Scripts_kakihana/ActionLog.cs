@@ -11,6 +11,11 @@ public class ActionLog : MonoBehaviour
     public List<string[]> radioCsvDatas = new List<string[]>();
     public TextAsset csvFile;
 
+    void Start()
+    {
+        
+    }
+
     public void CsvRead(string logName)
     {
         csvFile = Resources.Load(logName) as TextAsset;
@@ -21,9 +26,4 @@ public class ActionLog : MonoBehaviour
             radioCsvDatas.Add(line.Split(','));
         }
     }
-
-    void Start()
-    {
-    }
-
 }

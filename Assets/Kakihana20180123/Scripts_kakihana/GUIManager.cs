@@ -17,7 +17,7 @@ public class GUIManager : GameManagement
         COMMAND, // 通信指令部
         POLICECAR // パトカー
     }
-    Player playerSc;
+    private static Player playerSc;
     public Slider energyGage; // エネルギーゲージ
 
     public Image energyFull;
@@ -29,31 +29,29 @@ public class GUIManager : GameManagement
     [SerializeField] private Text originText; // 生成するテキスト
     [SerializeField] private InputField input; // 入力用テキスト
 
-    [NonSerialized] public string readRadioName; // 参照するCSVファイル名
-    ActionLog radioLog = new ActionLog(); // 参照するCSV読み込みスクリプト
+    public string readRadioName; // 参照するCSVファイル名
+    ActionLog radioLog; // 参照するCSV読み込みスクリプト
 
     void Awake()
     {
+        radioLog = new ActionLog();
         originElement.gameObject.SetActive(false);
         input.image.color = new Color(0, 0, 0, 0); 
     }
 
     // Use this for initialization
-    void Start()
+    public void Instance()
     {
-       
+        playerSc = GameObject.Find("Player" + MyNumber).GetComponent<Player>();
+        Debug.Log(energyGage);
+        energyGage.maxValue = playerSc.maxEnergy;
+        //EnergyStatusInit();
+        radioLog.CsvRead(readRadioName);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (playerSc == null)
-        {
-            playerSc = GameObject.Find("Player" + MyNumber).GetComponent<Player>();
-            energyGage.maxValue = playerSc.maxEnergy;
-            //EnergyStatusInit();
-            radioLog.CsvRead(readRadioName);
-        }
         energyGage.value = playerSc.energy;	
 	}
 
@@ -133,5 +131,4 @@ public class GUIManager : GameManagement
         string ret = radioLog.radioCsvDatas[sendWidth][sendHeight] + radioLog.radioCsvDatas[width][height];
         return ret;
     }
-
 }

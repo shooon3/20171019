@@ -57,7 +57,6 @@ public class Player : GameManagement
 
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     CharacterController cc; // キャラクターコントローラーを格納する
-    GameManagement gm;
 
     public Vector3 charMove = new Vector3(0.0f, 0.0f, 0.0f); // キャラクター移動量
     private Vector3 mouseclickPos = new Vector3(0.0f, 0.0f, 0.0f); // マウスクリック時の座標
@@ -89,7 +88,6 @@ public class Player : GameManagement
         // ステータスオブジェクトの名前を参照し格納、CharactorStatusコンポーネントを取得
         statusObj = GameObject.Find(statusName);
         charactorstatus = statusObj.GetComponent<CharactorStatus>();
-        guimanager = GetComponent<GUIManager>();
         //nameLabel = Instantiate(Resources.Load("NameLabel")) as GameObject;
 
         CharactorSetup();
@@ -107,6 +105,10 @@ public class Player : GameManagement
         PhotonNetwork.playerName = "Player" + m_photon.ownerId;
         transform.name = "Player" + m_photon.ownerId;
         MyNumber = m_photon.ownerId;
+
+        //プレイヤーのオブジェクト生成が完全に終わってからManagerのStartを始める
+        InstanceManage();
+        guimanager.Instance();
     }
 
     // Update is called once per frame

@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class manage : Photon.MonoBehaviour
+public class TestManage : Photon.MonoBehaviour
 {
 
     public bool inRoom;
-
-    public Transform[] spawnPos = new Transform[2];
-    public Vector3 InstancePos = new Vector3(0, 5, 0);
-    public Transform room;
     PhotonPlayer[] photonPlayer;
 
     // Use this for initialization
@@ -33,7 +29,6 @@ public class manage : Photon.MonoBehaviour
         //入室完了を出力し、キーロック解除
         Debug.Log("On Joined Room");
         inRoom = true;
-        PhotonNetwork.Instantiate("Player", room.position + InstancePos, Quaternion.identity, 0);
     }
 
     //ルームの入室に失敗
@@ -43,5 +38,18 @@ public class manage : Photon.MonoBehaviour
         //自分でルームを作成して入室
         PhotonNetwork.CreateRoom(null);
         inRoom = true;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Space))
+            PhotonNetwork.Instantiate("Cube", transform.position, Quaternion.identity, 0);
+    }
+
+    void OnReceivedRoomListUpdate()
+    {
+        //プレイヤーオブジェクトをResourcesからロード
+        photonPlayer = PhotonNetwork.playerList;
+        Debug.Log(photonPlayer.Length);
     }
 }
