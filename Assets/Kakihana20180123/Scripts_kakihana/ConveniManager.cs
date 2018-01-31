@@ -6,9 +6,11 @@ public class ConveniManager : MonoBehaviour {
 
     /*コンビニの管理メソッド*/
 
-    Conveni conveni; // 銀行ごとのクラス
+    public Conveni[] conveni; // コンビニごとのクラス
     GUIManager guimanager;
-    public GameObject[] conveniObjects; // 銀行ごとのオブジェクト
+    GameManagement gm;
+    public GameObject[] conveniObjects; // コンビニごとのオブジェクト
+    public GameObject[] conveniUniqueObj; // コンビニを識別するためのオブジェクト
 
     const int CONVENI_SIZE = 5; // 銀行オブジェクトの最大数
     public int[] conveniID; // 銀行ごとのID
@@ -26,22 +28,18 @@ public class ConveniManager : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        conveniObjects = GameObject.FindGameObjectsWithTag("Conveni"); // タグを元にオブジェクトを格納
+        gm = GameObject.Find("Master").GetComponent<GameManagement>();
+/*        conveniObjects = GameObject.FindGameObjectsWithTag("Conveni");*/ // タグを元にオブジェクトを格納
         guimanager = GameObject.Find("Status").GetComponent<GUIManager>();
-        int i = conveniObjects.Length; // Bankタグのオブジェクトの最大数を取得
-        conveniID = new int[i]; // IDの大きさをタグのオブジェクトの最大数に
-        for (int j = 0; j < conveniID.Length; j++)
-        {
-            //銀行のオブジェクトの数だけBankクラスのコンポーネントを取得し、銀行ごとにIDをつける
-            conveni = GameObject.Find("ConveniObj").GetComponent<Conveni>();
-            conveniID[j] = int.Parse(conveni.thisConveniId);
-        }
+        ConveniDataInit();
+        //int i = conveniObjects.Length; // conveniタグのオブジェクトの最大数を取得
+        //conveniID = new int[i]; // IDの大きさをタグのオブジェクトの最大数に
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeCount += Time.deltaTime;
+        //timeCount += Time.deltaTime;
         if (timeCount >= showTimeLimit)
         {
             showFlg = true;
@@ -67,13 +65,37 @@ public class ConveniManager : MonoBehaviour {
 
     }
 
+    public void ConveniDataInit()
+    {
+        int i = 0;
+        for(i = 0; i < 3; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    conveniUniqueObj[i] = GameObject.Find("Coveni1");
+                    break;
+                case 1:
+                    conveniUniqueObj[i] = GameObject.Find("Coveni2");
+                    break;
+                case 2:
+                    conveniUniqueObj[i] = GameObject.Find("Coveni3");
+                    break;
+            }
+            conveniObjects[i] = conveniUniqueObj[i].transform.parent.gameObject;
+            conveni[i] = conveniObjects[i].GetComponent<Conveni>();
+            conveniID[i] = int.Parse(conveni[i].thisConveniId);
+            conveniIdEathMoney[i] = conveni[i].haveMoney;
+        }
+    }
+
     public void RaidCheck(int id) // 襲撃確認メソッド
     {
         foreach (int i in conveniID) // 全銀行のIDを取り出す
         {
-            if (i == id && conveni.attacked == false) // IDが一致していてかつ一度も襲撃されていなかったら
+            if (i == id && conveni[i].attacked == false) // IDが一致していてかつ一度も襲撃されていなかったら
             {
-                conveni.raid = true; // 銀行を襲撃する
+                conveni[i].raid = true; // 銀行を襲撃する
             }
             else if (showFlg == true)
             {
@@ -84,11 +106,11 @@ public class ConveniManager : MonoBehaviour {
         }
     }
 
-    public int Raid(int money)
+    public int Raid(int money,int id)
     {
         int getMoney;
         getMoney = money;
-        conveni.attacked = true;
+        conveni[id].attacked = true;
         return getMoney;
     }
 

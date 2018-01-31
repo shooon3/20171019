@@ -10,6 +10,7 @@ public class Bank : MonoBehaviour {
 
     BankManager bankmanager; // 銀行管理クラス
     GUIManager guimanager;
+    GameManagement gm;
     GameObject bankmanagerObj; // 銀行管理クラスのオブジェクト
 
     public GameObject thisBankObj; // 自分の銀行のオブジェクト
@@ -28,9 +29,11 @@ public class Bank : MonoBehaviour {
         bankmanagerObj = GameObject.Find("Status"); // Statusの名前がついているオブジェクトを参照し取得
         bankmanager = bankmanagerObj.GetComponent<BankManager>(); // オブジェクトから銀行管理クラスコンポーネントを取得
         guimanager = bankmanagerObj.GetComponent<GUIManager>();
+        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<GameManagement>();
         raidPlayerObj = GameObject.FindGameObjectWithTag("Misdeed");
         haveMoney = bankmanager.PostMoney(int.Parse(thisBankId)); // 銀行管理クラスからIDと所持金を取得
         thisBankObj = this.gameObject;
+        gm.SetMoney(haveMoney);
 	}
 	
 	// Update is called once per frame
@@ -44,7 +47,7 @@ public class Bank : MonoBehaviour {
         {
             getMoney = thisBankRaid();
             haveMoney = haveMoney - getMoney;
-            player.GetMoney(getMoney);
+            gm.RaidMoney(getMoney);
             guimanager.PlayerInfulenceLogShow(
                 (int)GUIManager.SenderList.SYSTEM, 0,
                 player.playerName,

@@ -9,7 +9,8 @@ public class Conveni : MonoBehaviour {
     PlayerController player;
 
     ConveniManager convenimanager; // 銀行管理クラス
-    GUIManager guimanager;
+    GameManagement gm;
+    public GUIManager guimanager;
     GameObject convenimanagerObj; // 銀行管理クラスのオブジェクト
 
     public GameObject thisConveniObj; // 自分の銀行のオブジェクト
@@ -17,7 +18,7 @@ public class Conveni : MonoBehaviour {
     public GameObject raidPlayerObj; // 襲撃したプレイヤーのオブジェクト
 
     public string thisConveniId; // 自分のID
-    [SerializeField] private int haveMoney; // 所持金
+    [SerializeField] public int haveMoney; // 所持金
     public bool attacked = false; // 襲撃されたか
     public bool raid = false; // 襲撃フラグ
     public static bool raidFlg = false; // 襲撃フラグ（銀行管理クラス用
@@ -25,12 +26,14 @@ public class Conveni : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<GameManagement>();
         convenimanagerObj = GameObject.Find("Status"); // Statusの名前がついているオブジェクトを参照し取得
         convenimanager = convenimanagerObj.GetComponent<ConveniManager>(); // オブジェクトから銀行管理クラスコンポーネントを取得
-        guimanager = convenimanager.GetComponent<GUIManager>();
+        guimanager = convenimanagerObj.GetComponent<GUIManager>();
         raidPlayerObj = GameObject.FindGameObjectWithTag("Misdeed");
         haveMoney = convenimanager.PostMoney(int.Parse(thisConveniId)); // 銀行管理クラスからIDと所持金を取得
         thisConveniObj = this.gameObject;
+        gm.SetMoney(haveMoney);
     }
 	
 	// Update is called once per frame
@@ -41,9 +44,9 @@ public class Conveni : MonoBehaviour {
         }
         if (raid == true)
         {
-            getMoney = thisBankRaid();
+            getMoney = thisConveniRaid();
             haveMoney = haveMoney - getMoney;
-            player.GetMoney(getMoney);
+            gm.RaidMoney(getMoney);
             guimanager.PlayerInfulenceLogShow(
                 (int)GUIManager.SenderList.SYSTEM, 0,
                 player.playerName,
@@ -54,10 +57,11 @@ public class Conveni : MonoBehaviour {
             raid = false;
         }
     }
-    public int thisBankRaid()
+
+    public int thisConveniRaid()
     {
         int money;
-        money = convenimanager.Raid(haveMoney);
+        money = convenimanager.Raid(haveMoney,int.Parse(thisConveniId));
         return money;
     }
 

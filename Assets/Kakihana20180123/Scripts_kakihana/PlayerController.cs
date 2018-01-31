@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour {
         TAKEITEM = 3, // アイテム取得
         ENERGYCHARGE = 4, // エネルギー充電
         RESCUE = 5, // 気絶したプレイヤーを復活
-        RESCUEWAIT = 6 // 復活待ち
+        RESCUEWAIT = 6, // 復活待ち
+        ESCAPE = 7, // 逃走
     }
     public enum PLAYERTYPE // 自分の所属
     {
@@ -21,28 +22,31 @@ public class PlayerController : MonoBehaviour {
         MISDEED = 2 // ミスディード
     }
 
-    public Animator animetor; // キャラクターのアニメーター
+    public Animator animator; // キャラクターのアニメーター
     public CharacterController cc; // キャラクターコントローラー
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     GUIManager guimanager; // GUIクラスのオブジェクト
     GameManagement gm; // マスタークラスのオブジェクト
+    Bank bank;
+    Conveni conveni;
     //public GamePad.Index padId;
 
     public string playerName; // プレイヤー名
     public int playerId; // プレイヤーID
     public int orderNum; // ゲームマスタークラスが識別するための番号
-    public PhotonView myPhotonView; // 自分のPhotonview
-    public PhotonTransformView myPhotonTransView; // 自分のPhotonTransformView
+    //public PhotonView myPhotonView; // 自分のPhotonview
+    //public PhotonTransformView myPhotonTransView; // 自分のPhotonTransformView
 
-    [SerializeField] private int playerType = (int)PLAYERTYPE.MISDEED;// プレイヤーの属性 1でガーディアン、2でミスディード
+    [SerializeField] public int playerType = (int)PLAYERTYPE.MISDEED;// プレイヤーの属性 1でガーディアン、2でミスディード
     [SerializeField] public int charactorHp = 0; // プレイヤーのHP
     [SerializeField] private int charactorMaxHp = 0; // 最大HP
     [SerializeField] private int charactorAtk = 0; // 攻撃力
     [SerializeField] private float charactorSpeed = 0.0f; // 移動速度
-    [SerializeField] private float charactorMoney; // 所持金
-    [SerializeField] private float jumpSpeed = 10.0f; // ジャンプ移動量
+    [SerializeField] public int charactorMoney; // 所持金
+    [SerializeField] private float jumpSpeed = 1.5f; // ジャンプ移動量
     [SerializeField] private float runSpeed; // ダッシュ時のスピード
     [SerializeField] private bool dashFlg; // ダッシュしているか
+    [SerializeField] public int GroupMoney;
     private float originSpeed = 0.0f; // 元のキャラクタースピード
 
     [SerializeField] public int energy = 100; // スタンガン発射に必要なエネルギー
@@ -102,8 +106,11 @@ public class PlayerController : MonoBehaviour {
         //{
         //    MoveUpdate(); // 移動量を決めるメソッド
         //}
-        MoveUpdate(); // 移動量を決めるメソッド
-        RotationUpdate(); // 向きを決めるメソッド
+        if (!isStun)
+        {
+            MoveUpdate(); // 移動量を決めるメソッド
+            RotationUpdate(); // 向きを決めるメソッド
+        }
 
         cc.Move(charMove * Time.deltaTime); // キャラクター移動
         if (actionType != Action.NONE && Input.GetKey(KeyCode.E) == true)
@@ -158,7 +165,7 @@ public class PlayerController : MonoBehaviour {
         bulletTimeInterval -= Time.deltaTime;
         punchTimeInterval -= Time.deltaTime;
         Vector3 velocity = cc.velocity;
-        myPhotonTransView.SetSynchronizedValues(velocity, 0);
+        //myPhotonTransView.SetSynchronizedValues(velocity, 0);
         DebugTest();
     }
 
@@ -199,9 +206,18 @@ public class PlayerController : MonoBehaviour {
         if (cc.isGrounded)
         {
             charMove = targetDirection * charactorSpeed;
+            if (charMove.x != 0.0f || charMove.z != 0.0f)
+            {
+                animator.SetBool("Run", true);
+            }
+            else
+            {
+                animator.SetBool("Run", false);
+            }
             if (Input.GetKey(KeyCode.LeftShift)==true)
             {
                 charactorSpeed = (charactorSpeed * runSpeed);
+                
             }
             else
             {
@@ -210,6 +226,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetButton("Jump"))
             {
                 charMove.y = jumpSpeed;
+                animator.SetTrigger("Jump");
             }
             else
             {
@@ -274,19 +291,21 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void GetMoney(int money)
-    {
-        charactorMoney += money;
-    }
-
     void Stun() // 気絶メソッド
     {
         rescueObj.SetActive(true); // 救助用当たり判定を表示
+        animator.SetBool("Stun", true);
         actionType = Action.RESCUEWAIT; // 行動は気絶待ち状態に
-        guimanager.LogShow(
-            (int)GUIManager.SenderList.SYSTEM, 0,
-            (int)GUIManager.SenderList.SYSTEM, 4); // 気絶ログを表示
-        gm.isStun[orderNum] = true; // マスタークラスに気絶状態を送信
+        rescueTime += Time.deltaTime;
+        if (rescueTime > rescueTimeLimit)
+        {
+            isStun = false;
+            animator.SetBool("Stun", false);
+        }
+        //guimanager.LogShow(
+        //    (int)GUIManager.SenderList.SYSTEM, 0,
+        //    (int)GUIManager.SenderList.SYSTEM, 4); // 気絶ログを表示
+        //gm.isStun[orderNum] = true; // マスタークラスに気絶状態を送信
     }
 
     void IsRescue() // 救助メソッド
@@ -302,7 +321,7 @@ public class PlayerController : MonoBehaviour {
             charactorHp = charactorMaxHp; // 自分のHPを回復
             actionType = Action.NONE; // 通常状態に
             isStun = false; // 気絶を解除
-            gm.isStun[orderNum] = false; // マスタークラスに気絶解除を送信
+            /*gm.isStun[orderNum] = false;*/ // マスタークラスに気絶解除を送信
             rescueObj.SetActive(false); // 救助用当たり判定を非表示に
         }
     }
@@ -324,21 +343,26 @@ public class PlayerController : MonoBehaviour {
             actionType = Action.CONVENIRAID;
         }
 
-        if (col.gameObject.tag == "Charge" && playerType == 2)
+        if (col.gameObject.tag == "Charge" && playerType == (int)PLAYERTYPE.MISDEED)
         {
             actionType = Action.ENERGYCHARGE;
+        }
+
+        if (col.gameObject.tag =="Escape" && playerType == (int)PLAYERTYPE.MISDEED)
+        {
+            gm.EscapeFinish();
         }
 
         if (col.gameObject.tag == "Rescue" && playerType == (int)PLAYERTYPE.GUARDIAN)
         {
             actionType = Action.RESCUE; 
-            beRescueObj = col.gameObject;
+            beRescueObj = col.transform.parent.gameObject;
             rescuePlayerScript = beRescueObj.GetComponent<PlayerController>();
         }
 
         if (col.gameObject.tag == "Bullet" && playerType == (int)PLAYERTYPE.GUARDIAN)
         {
-            int damage = -80;
+            int damage = 80;
             charactorHp -= damage;
             Destroy(col);
         }
@@ -355,6 +379,7 @@ public class PlayerController : MonoBehaviour {
         }
 
     }
+
     void OnTriggerExit(Collider col) // 行動を起こすオブジェクトから離れたら行動状態を解除
     {
         if (col.gameObject.tag == "Bank" && actionType == Action.BANKRAID)
@@ -365,7 +390,6 @@ public class PlayerController : MonoBehaviour {
         {
             actionType = Action.NONE;
         }
-
         if (col.gameObject.tag == "Conveni" && actionType == Action.CONVENIRAID)
         {
             actionType = Action.NONE;

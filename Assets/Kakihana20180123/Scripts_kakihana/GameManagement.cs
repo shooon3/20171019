@@ -19,8 +19,8 @@ public class GameManagement : MonoBehaviour {
     public int[] playerHp = new int[PLAYER_PEOPLE]; // プレイヤーHP
     public bool[] areyouMisdeed = new bool[PLAYER_PEOPLE]; // ミスディードかどうか
 
-    public int citizenGroupMoney; // 市民側の所持金
-    public int terroGroupMoney; // テロリスト側の所持金
+    public int guardianGroupMoney; // ガーディアン側の所持金
+    public int misdeedGroupMoney; // ミスディード側の所持金
 
     public int count = 0; // 経過時間
     const int timeLimit = 300; // 制限時間
@@ -41,6 +41,7 @@ public class GameManagement : MonoBehaviour {
         GameObject statusObj = GameObject.Find("Status");
         guimanager = statusObj.GetComponent<GUIManager>();
         PlayerInfoInit();
+        PlayerMoneyInit();
     }
 	
 	// Update is called once per frame
@@ -136,40 +137,56 @@ public class GameManagement : MonoBehaviour {
         }
     }
 
-    //public void PlayerInfoInit()
-    //{
-    //    uniqueObj[0] = GameObject.Find("UniqueNo1");
-    //    playerObj[0] = uniqueObj[0].transform.parent.gameObject;
-    //    playerInfo[0] = playerObj[0].GetComponent<PlayerController>();
-    //    playerTrans[0] = playerInfo[0].transform;
-    //    playerId[0] = playerInfo[0].playerId;
-    //    playerName[0] = playerInfo[0].playerName;
-    //    playerHp[0] = playerInfo[0].charactorHp;
-
-    //    if (playerInfo[0].tag == "Misdeed")
-    //    {
-    //        areyouMisdeed[0] = true;
-    //        isStun[0] = false;
-    //        isArrest[0] = false;
-    //        isRaid[0] = false;
-    //        isStun[0] = false;
-    //        rescue[0] = false;
-    //    }
-    //    else if(playerInfo[0].tag == "Gurdian")
-    //    {
-    //        areyouMisdeed[0] = false;
-    //        isStun[0] = false;
-    //        isArrest[0] = false;
-    //        isRaid[0] = false;
-    //        isStun[0] = false;
-    //        rescue[0] = false;
-    //    }
-    //    playerInfo[0].orderNum = 0;
-    //}
+    public void PlayerMoneyInit()
+    {
+        int i;
+        for (i = 0; i < PLAYER_PEOPLE; i++)
+        {
+            switch (playerInfo[i].playerType)
+            {
+                case 1:
+                    playerInfo[i].GroupMoney = guardianGroupMoney;
+                    break;
+                case 2:
+                    playerInfo[i].GroupMoney = misdeedGroupMoney;
+                    break;
+            }
+        }
+    }
 
     public void StunManager(int orderNum)
     {
         isStun[orderNum] = true;
+    }
+
+    public void SetMoney(int money)
+    {
+        guardianGroupMoney += money;
+    }
+
+    public void GetMoney()
+    {
+        int i;
+        for (i = 0; i < PLAYER_PEOPLE; i++)
+        {
+            switch (playerInfo[i].playerType)
+            {
+                case 1:
+                    playerInfo[i].GroupMoney = guardianGroupMoney;
+                    break;
+                case 2:
+                    playerInfo[i].GroupMoney = misdeedGroupMoney;
+                    playerInfo[i].charactorMoney = misdeedGroupMoney;
+                    name = playerInfo[i].playerName;
+                    break;
+            }
+        }
+    }
+
+    public void RaidMoney(int money)
+    {
+        guardianGroupMoney -= money;
+        misdeedGroupMoney += money;
     }
 
     public void GameFinish() // 引き分けメソッド
