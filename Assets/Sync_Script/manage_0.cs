@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class manage : MonoBehaviour {
+public class manage_0 : MonoBehaviour {
 
     private bool KeyLock;
     GameObject player;
