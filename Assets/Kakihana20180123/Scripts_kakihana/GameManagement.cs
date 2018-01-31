@@ -38,6 +38,8 @@ public class GameManagement : Photon.MonoBehaviour
 
     private PhotonView m_photon_manege;
 
+    private static bool firstSync = false;
+
     private void Start()
     {
         guimanager = GetComponent<GUIManager>();
@@ -97,19 +99,16 @@ public class GameManagement : Photon.MonoBehaviour
                 GameFinish();
             }
         }
-        Debug.Log(playerName[MyNumber - 1]);
+        Debug.Log(playerName[MyNumber]);
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        for (int i = 0; i < playerId.Length; i++)
+
+        if (stream.isWriting)
         {
-            if (playerId[i] == 0 || (int)stream.ReceiveNext() == 0)
-                return;
-
-            if (stream.isWriting)
+            for (int i = 0; i < playerId.Length; i++)
             {
-
                 if (playerId[i] == 0)
                     return;
 
@@ -117,9 +116,11 @@ public class GameManagement : Photon.MonoBehaviour
                 stream.SendNext(playerName[i]);
                 stream.SendNext(playerHp[i]);
                 stream.SendNext(areyouTerrorist[i]);
-
             }
-            else
+        }
+        else
+        {
+            for (int i = 0; i < playerId.Length; i++)
             {
                 if ((int)stream.ReceiveNext() == 0)
                     return;
