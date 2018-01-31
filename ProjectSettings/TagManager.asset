@@ -11,8 +11,12 @@ TagManager:
   - Under
   - GameInfo
   - GameMaster
-  - Room
-  - UI_EGage
+  - Misdeed
+  - Guardian
+  - Conveni
+  - Rescue
+  - Bullet
+  - Punch
   layers:
   - Default
   - TransparentFX

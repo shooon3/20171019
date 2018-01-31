@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
-    Transform playerTransform; // プレイヤーの座標
-    GameObject playerObj; // プレイヤーのゲームオブジェクトを格納
+    private Transform playerTransform;// プレイヤーの座標
+    private GameObject playerObj;// プレイヤーのゲームオブジェクトを格納
 
-    Player playerRot; // プレイヤーの情報を参照するクラス
+    private PlayerController player;
 
     float shootSpeed = 10.0f; // 弾のスピード
-    Vector3 bulletDirection = new Vector3(0.0f, 0.0f, 0.0f); // 弾の移動量
-
-	// Use this for initialization
-	void Start () {
-        playerTransform = GameObject.Find("PlayerController").transform; // プレイヤーの座標を取得し格納
-        playerObj = GameObject.Find("PlayerController"); // プレイヤーのゲームオブジェクトを参照
-        playerRot = playerObj.GetComponent<Player>(); // プレイヤー情報クラスのコンポーネントを取得
-        transform.position = playerTransform.position; // 弾の発射座標をプレイヤー自身に
+    private Vector3 bulletDirection = new Vector3(0.0f, 0.0f, 0.0f); // 弾の移動量
+    public Vector3 offset = new Vector3(0.0f, 1.5f, 2.0f);
+    // Use this for initialization
+    void Start () {
+        playerObj = GameObject.FindGameObjectWithTag("Misdeed");
+        playerTransform = playerObj.transform;
+        player = playerObj.GetComponent<PlayerController>(); // プレイヤー情報クラスのコンポーネントを取得
+        transform.position = playerTransform.position + offset; // 弾の発射座標をプレイヤー自身に
         transform.forward = Camera.main.transform.forward; // 発射方向は常に画面の中央部分に
 		
 	}

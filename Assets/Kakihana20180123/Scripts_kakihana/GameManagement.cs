@@ -1,63 +1,52 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagement : Photon.MonoBehaviour
-{
+public class GameManagement : MonoBehaviour {
 
     /*共有したいゲーム情報を管理するクラス*/
-    [NonSerialized] public static GameObject[] citizenPlayerInfo = new GameObject[3]; // 市民のプレイヤー情報
-    [NonSerialized] public static GameObject[] terroPlayerInfo = new GameObject[1]; // テロリストのプレイヤー情報
+    const int PLAYER_PEOPLE = 4; // プレイヤー人数
 
-    [NonSerialized] public static GUIManager guimanager;
+    public GameObject[] playerObj = new GameObject[PLAYER_PEOPLE]; // 参照するプレイヤー
+    public GameObject[] uniqueObj = new GameObject[PLAYER_PEOPLE]; // プレイヤーを識別するための子オブジェクト
+    public Transform[] playerTrans = new Transform[PLAYER_PEOPLE]; // プレイヤーの座標
+    [SerializeField]
+    private PlayerController[] playerInfo = new PlayerController[PLAYER_PEOPLE];
+    GUIManager guimanager;
 
-    [NonSerialized] public static int MyNumber;//プレイヤーIDのバッファ
+    public int[] playerId = new int[PLAYER_PEOPLE]; // プレイヤーID
+    public string[] playerName = new string[PLAYER_PEOPLE]; // プレイヤー名
+    public int[] playerHp = new int[PLAYER_PEOPLE]; // プレイヤーHP
+    public bool[] areyouMisdeed = new bool[PLAYER_PEOPLE]; // ミスディードかどうか
 
-    [NonSerialized] public static int[] playerId = new int[4]; // プレイヤーID
-    [NonSerialized] public static string[] playerName = new string[4]; // プレイヤー名
-    [NonSerialized] public static int[] playerHp = new int[4]; // プレイヤーHP
-    [NonSerialized] public static bool[] areyouTerrorist = new bool[4]; // テロリストかどうか
+    public int guardianGroupMoney; // ガーディアン側の所持金
+    public int misdeedGroupMoney; // ミスディード側の所持金
 
-    [NonSerialized] public static int citizenGroupMoney; // 市民側の所持金
-    [NonSerialized] public static int terroGroupMoney; // テロリスト側の所持金
-
-    [NonSerialized] public int count = 0; // 経過時間
+    public int count = 0; // 経過時間
     const int timeLimit = 300; // 制限時間
 
-    [NonSerialized] public static int logCount = 0;
-    [NonSerialized] public static int startCount = 0;
+    public int logCount = 0;
+    public int startCount = 0;
     int startCountLimit = 10;
 
-    [NonSerialized] public static bool[] isStun = new bool[4]; // 気絶しているか
-    [NonSerialized] public static bool[] isArrest = new bool[4]; // 確保されたか（テロリスト）
-    [NonSerialized] public static bool[] isRaid = new bool[4]; // 襲撃されたか
-    [NonSerialized] public static bool[] respawn = new bool[4]; // 復活待機
+    public List<bool> isStun = new List<bool>(); // 気絶しているか
+    public List<bool> isArrest = new List<bool>(); // 確保されたか（テロリスト）
+    public List<bool> isRaid = new List<bool>();// 襲撃されたか
+    public List<bool> rescue = new List<bool>(); // 気絶状態から回復行動をしているプレイヤーを検知 
 
-    [NonSerialized] public bool startFlg = false;
+    public bool startFlg = false;
 
-    private PhotonView m_photon_manege;
-
-    private void Start()
-    {
-        guimanager = GetComponent<GUIManager>();
+	// Use this for initialization
+	void Start () {
+        GameObject statusObj = GameObject.Find("Status");
+        guimanager = statusObj.GetComponent<GUIManager>();
+        PlayerInfoInit();
+        PlayerMoneyInit();
     }
-
-    // Use this for initialization
-    public void InstanceManage ()
-    {
-        terroPlayerInfo = GameObject.FindGameObjectsWithTag("Terrorist");
-        citizenPlayerInfo = GameObject.FindGameObjectsWithTag("Citizen");
-        m_photon_manege = GetComponent<PhotonView>();
-        Debug.Log(MyNumber);
-        playerId[MyNumber - 1] = MyNumber;
-        playerName[MyNumber - 1] = "Player" + MyNumber;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Time.frameCount % 60 == 0)
+	
+	// Update is called once per frame
+	void Update () {
+        if (Time.frameCount % 60 ==0)
         {
             startCount++;
         }
@@ -97,44 +86,122 @@ public class GameManagement : Photon.MonoBehaviour
                 GameFinish();
             }
         }
-        Debug.Log(playerName[MyNumber - 1]);
+		
+	}
+
+    public void PlayerInfoInit() // ユニークオブジェクトより各プレイヤーの情報を格納
+    {
+        int i = 0;
+        for (i = 0; i < PLAYER_PEOPLE; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    uniqueObj[i] = GameObject.Find("UniqueNo1");
+                    break;
+                case 1:
+                    uniqueObj[i] = GameObject.Find("UniqueNo2");
+                    break;
+                case 2:
+                    uniqueObj[i] = GameObject.Find("UniqueNo3");
+                    break;
+                case 3:
+                    uniqueObj[i] = GameObject.Find("UniqueNo4");
+                    break;
+            }
+            playerObj[i] = uniqueObj[i].transform.parent.gameObject;
+            playerInfo[i] = playerObj[i].GetComponent<PlayerController>();
+            playerTrans[i] = playerInfo[i].transform;
+            playerId[i] = playerInfo[i].playerId;
+            playerName[i] = playerInfo[i].playerName;
+            playerHp[i] = playerInfo[i].charactorHp;
+            if (playerInfo[i].tag == "Misdeed")
+            {
+                areyouMisdeed[i] = true;
+                isStun[i] = false;
+                isArrest[i] = false;
+                isRaid[i] = false;
+                isStun[i] = false;
+                rescue[i] = false;
+            }
+            else if (playerInfo[i].tag == "Gurdian")
+            {
+                areyouMisdeed[i] = false;
+                isStun[i] = false;
+                isArrest[i] = false;
+                isRaid[i] = false;
+                isStun[i] = false;
+                rescue[i] = false;
+            }
+            playerInfo[i].orderNum = i;
+        }
     }
 
-    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void PlayerMoneyInit()
     {
-        for (int i = 0; i < playerId.Length; i++)
+        int i;
+        for (i = 0; i < PLAYER_PEOPLE; i++)
         {
-            if (playerId[i] == 0 || (int)stream.ReceiveNext() == 0)
-                return;
-
-            if (stream.isWriting)
+            switch (playerInfo[i].playerType)
             {
-
-                if (playerId[i] == 0)
-                    return;
-
-                stream.SendNext(playerId[i]);
-                stream.SendNext(playerName[i]);
-                stream.SendNext(playerHp[i]);
-                stream.SendNext(areyouTerrorist[i]);
-
-            }
-            else
-            {
-                if ((int)stream.ReceiveNext() == 0)
-                    return;
-
-                playerId[i] = (int)stream.ReceiveNext();
-                playerName[i] = (string)stream.ReceiveNext();
-                playerHp[i] = (int)stream.ReceiveNext();
-                areyouTerrorist[i] = (bool)stream.ReceiveNext();
-
+                case 1:
+                    playerInfo[i].GroupMoney = guardianGroupMoney;
+                    break;
+                case 2:
+                    playerInfo[i].GroupMoney = misdeedGroupMoney;
+                    break;
             }
         }
     }
 
-    void GameFinish()
+    public void StunManager(int orderNum)
+    {
+        isStun[orderNum] = true;
+    }
+
+    public void SetMoney(int money)
+    {
+        guardianGroupMoney += money;
+    }
+
+    public void GetMoney()
+    {
+        int i;
+        for (i = 0; i < PLAYER_PEOPLE; i++)
+        {
+            switch (playerInfo[i].playerType)
+            {
+                case 1:
+                    playerInfo[i].GroupMoney = guardianGroupMoney;
+                    break;
+                case 2:
+                    playerInfo[i].GroupMoney = misdeedGroupMoney;
+                    playerInfo[i].charactorMoney = misdeedGroupMoney;
+                    name = playerInfo[i].playerName;
+                    break;
+            }
+        }
+    }
+
+    public void RaidMoney(int money)
+    {
+        guardianGroupMoney -= money;
+        misdeedGroupMoney += money;
+    }
+
+    public void GameFinish() // 引き分けメソッド
     {
 
     }
+
+    public void ArrestFinish() // ガーディアン勝利メソッド
+    {
+
+    }
+
+    public void EscapeFinish() // ミスディード勝利メソッド
+    {
+
+    }
+
 }

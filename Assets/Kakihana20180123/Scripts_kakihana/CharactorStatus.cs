@@ -18,29 +18,29 @@ public class CharactorStatus : MonoBehaviour
     private int playerMoney = 0; // 所持金
     string playerTag; // タグ
 
-    // プレイヤー（テロリスト）の基本ステータス
-    private int terroristHp = 200;
-    const int terroristMaxHp = 200;
-    private int terroristAtk = 50;
-    private float terroristSpeed = 7.0f;
-    private int terroristMoney = 0;
+    // プレイヤー（misdeed）の基本ステータス
+    private int misdeedHp = 200;
+    const int misdeedMaxHp = 200;
+    private int misdeedAtk = 50;
+    private float misdeedSpeed = 7.0f;
+    private int misdeedMoney = 0;
 
-    // プレイヤー（市民）の基本ステータス
-    private int citizenHp = 100;
-    const int citizenMaxHp = 100;
-    private int citizenAtk = 1;
-    private float citizenSpeed = 7.0f; 
-    private int citizenMoney = 3000;
+    // プレイヤー（guardian）の基本ステータス
+    private int guardianHp = 100;
+    const int guardianMaxHp = 100;
+    private int guardianAtk = 1;
+    private float guardianSpeed = 7.0f; 
+    private int guardianMoney = 3000;
 
     public int postPlayerHp(int charType)
     {
         switch (charType)
         {
             case 1:
-                playerHp = citizenHp;
+                playerHp = guardianHp;
                 break;
             case 2:
-                playerHp = terroristHp;
+                playerHp = misdeedHp;
                 break;
             default:
                 playerHp = 10;
@@ -54,10 +54,10 @@ public class CharactorStatus : MonoBehaviour
         switch (charType)
         {
             case 1:
-                playerMaxHp = citizenMaxHp;
+                playerMaxHp = guardianMaxHp;
                 break;
             case 2:
-                playerMaxHp = terroristMaxHp;
+                playerMaxHp = misdeedMaxHp;
                 break;
             default:
                 playerMaxHp = 10;
@@ -70,10 +70,10 @@ public class CharactorStatus : MonoBehaviour
         switch (charType)
         {
             case 1:
-                playerAtk = citizenAtk;
+                playerAtk = guardianAtk;
                 break;
             case 2:
-                playerAtk = terroristAtk;
+                playerAtk = misdeedAtk;
                 break;
             default:
                 playerAtk = 2;
@@ -87,10 +87,10 @@ public class CharactorStatus : MonoBehaviour
         switch (charType)
         {
             case 1:
-                playerSpeed = citizenSpeed;
+                playerSpeed = guardianSpeed;
                 break;
             case 2:
-                playerSpeed = terroristSpeed;
+                playerSpeed = misdeedSpeed;
                 break;
             default:
                 playerSpeed = 5.0f;
@@ -104,10 +104,10 @@ public class CharactorStatus : MonoBehaviour
         switch (charType)
         {
             case 1:
-                playerMoney = citizenMoney;
+                playerMoney = guardianMoney;
                 break;
             case 2:
-                playerMoney = terroristMoney;
+                playerMoney = misdeedMoney;
                 break;
             default:
                 playerMoney = 1000;
@@ -121,13 +121,13 @@ public class CharactorStatus : MonoBehaviour
         switch (charType)
         {
             case 1:
-                playerTag = "Citizen";
+                playerTag = "Guardian";
                 break;
             case 2:
-                playerTag = "Terrorist";
+                playerTag = "Misdeed";
                 break;
             default:
-                playerTag = "Citizen";
+                playerTag = "Guardian";
                 break;
         }
         return playerTag;

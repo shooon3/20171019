@@ -4,17 +4,11 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActionLog : MonoBehaviour
-{
+public class ActionLog : MonoBehaviour {
     /*ログ表示用のCSVファイルを格納するクラス*/
 
     public List<string[]> radioCsvDatas = new List<string[]>();
     public TextAsset csvFile;
-
-    void Start()
-    {
-        
-    }
 
     public void CsvRead(string logName)
     {
@@ -26,4 +20,9 @@ public class ActionLog : MonoBehaviour
             radioCsvDatas.Add(line.Split(','));
         }
     }
+
+    void Start()
+    {
+    }
+
 }

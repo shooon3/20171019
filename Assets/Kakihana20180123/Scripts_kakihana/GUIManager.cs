@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIManager : GameManagement
-{
+public class GUIManager : MonoBehaviour {
+
     /*
     UI関連表示クラス
     */
@@ -17,8 +16,11 @@ public class GUIManager : GameManagement
         COMMAND, // 通信指令部
         POLICECAR // パトカー
     }
-    private static Player playerSc;
-    public Slider energyGage; // エネルギーゲージ
+
+    PlayerController player; // プレイヤー情報
+    GameManagement gm;
+    public GameObject GameMaster;
+    public Slider energyGage1, energyGage2, energyGage3, energyGage4; // エネルギーゲージ
 
     public Image energyFull;
     public Image energyCaution;
@@ -30,30 +32,27 @@ public class GUIManager : GameManagement
     [SerializeField] private InputField input; // 入力用テキスト
 
     public string readRadioName; // 参照するCSVファイル名
-    ActionLog radioLog; // 参照するCSV読み込みスクリプト
+    ActionLog radioLog = new ActionLog(); // 参照するCSV読み込みスクリプト
 
     void Awake()
     {
-        radioLog = new ActionLog();
         originElement.gameObject.SetActive(false);
         input.image.color = new Color(0, 0, 0, 0); 
     }
 
-    // Use this for initialization
-    public void Instance()
-    {
-        playerSc = GameObject.Find("Player" + MyNumber).GetComponent<Player>();
-        Debug.Log(energyGage);
-        energyGage.maxValue = playerSc.maxEnergy;
-        //EnergyStatusInit();
+	// Use this for initialization
+	void Start () {
+        gm = GameMaster.GetComponent<GameManagement>();
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
+        energyGage1 = GameObject.Find("EnergyGage").GetComponent<Slider>();
         radioLog.CsvRead(readRadioName);
     }
 	
 	// Update is called once per frame
-	void Update ()
-    {
-        energyGage.value = playerSc.energy;	
-	}
+	void Update () {
+        energyGage1.value = player.energy;
+
+    }
 
     void EnergyStatusInit()
     {
@@ -61,7 +60,7 @@ public class GUIManager : GameManagement
 
     public void DownEnergy(float downValue)
     {
-        energyFull.fillAmount = downValue / playerSc.maxEnergy;
+        energyFull.fillAmount = downValue / player.maxEnergy;
     }
 
     public void LogShow(int sendWidth,int sendHeight,int textwidth,int textheight) // 通常ログ出力メソッド
@@ -131,4 +130,5 @@ public class GUIManager : GameManagement
         string ret = radioLog.radioCsvDatas[sendWidth][sendHeight] + radioLog.radioCsvDatas[width][height];
         return ret;
     }
+
 }
