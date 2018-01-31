@@ -6,10 +6,13 @@ public class Bank : MonoBehaviour {
 
     /*銀行ごとのクラス*/
 
+    PlayerController player;
+
     BankManager bankmanager; // 銀行管理クラス
     GUIManager guimanager;
+    GameManagement gm;
     GameObject bankmanagerObj; // 銀行管理クラスのオブジェクト
-    Player player; // プレイヤー情報
+
     public GameObject thisBankObj; // 自分の銀行のオブジェクト
 
     public GameObject raidPlayerObj; // 襲撃したプレイヤーのオブジェクト
@@ -26,23 +29,31 @@ public class Bank : MonoBehaviour {
         bankmanagerObj = GameObject.Find("Status"); // Statusの名前がついているオブジェクトを参照し取得
         bankmanager = bankmanagerObj.GetComponent<BankManager>(); // オブジェクトから銀行管理クラスコンポーネントを取得
         guimanager = bankmanagerObj.GetComponent<GUIManager>();
+        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<GameManagement>();
+        raidPlayerObj = GameObject.FindGameObjectWithTag("Misdeed");
         haveMoney = bankmanager.PostMoney(int.Parse(thisBankId)); // 銀行管理クラスからIDと所持金を取得
         thisBankObj = this.gameObject;
+        gm.SetMoney(haveMoney);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (raidFlg)
+        {
+            Raid();
+            raidFlg = false;
+        }
         if (raid == true)
         {
             getMoney = thisBankRaid();
             haveMoney = haveMoney - getMoney;
-            player.GetMoney(getMoney);
+            gm.RaidMoney(getMoney);
             guimanager.PlayerInfulenceLogShow(
                 (int)GUIManager.SenderList.SYSTEM, 0,
-                player.m_photon.owner.NickName,
+                player.playerName,
                 (int)GUIManager.SenderList.SYSTEM, 4,
                 getMoney,
-                (int)GUIManager.SenderList.SYSTEM, 5
+                (int)GUIManager.SenderList.SYSTEM, 6
                 );
             raid = false;
         }
@@ -58,11 +69,7 @@ public class Bank : MonoBehaviour {
     public void SetObj(GameObject obj)
     {
         raidPlayerObj = obj;
-        player = raidPlayerObj.GetComponent<Player>();
-        if (raidFlg)
-        {
-            Raid();
-        }
+        player = raidPlayerObj.GetComponent<PlayerController>();
     }
 
     public void Raid()
@@ -72,10 +79,9 @@ public class Bank : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Terrorist")
+        if (col.gameObject.tag == "Misdeed")
         {
             SetObj(col.gameObject);
-            Debug.Log("テロリスト侵入");
         }
 
     }

@@ -6,7 +6,7 @@ public class Charge : MonoBehaviour {
 
     /*エネルギー充電クラス*/
 
-    Player player; // 参照するプレイヤークラス
+    PlayerController player; // 参照するプレイヤークラス
     GameObject playerObj; // 参照するプレイヤーオブジェクト
 
     public static bool chargeFlg = false; // チャージするか
@@ -29,7 +29,7 @@ public class Charge : MonoBehaviour {
         if (col.gameObject.tag == "Terrorist") // プレイヤーが接近した時にプレイヤー情報を取得
         {
             playerObj = col.gameObject;
-            player = playerObj.GetComponent<Player>();
+            player = playerObj.GetComponent<PlayerController>();
         }
     }
 

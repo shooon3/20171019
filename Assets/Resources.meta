@@ -1,19 +1,7 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-<<<<<<< HEAD
-guid: a8419db67c984774a8a8045213ee6e9b
-folderAsset: yes
-timeCreated: 1510202349
-=======
 guid: 585d88f931cb43a4281520c15b4f6c8a
 folderAsset: yes
 timeCreated: 1512531163
->>>>>>> origin/KakihanaNkc
-=======
-guid: 585d88f931cb43a4281520c15b4f6c8a
-folderAsset: yes
-timeCreated: 1512531163
->>>>>>> origin/KakihanaNkc
 licenseType: Free
 DefaultImporter:
   externalObjects: {}
