@@ -699,11 +699,11 @@ Prefab:
     - target: {fileID: 224717076843010860, guid: 9be8713dc6938c147b83ce6bb0ef7a12,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 1570029419739860, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
       propertyPath: m_Name
-      value: EnergyGage3
+      value: EnergyGage4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
@@ -798,7 +798,7 @@ GameObject:
   - component: {fileID: 97023741}
   - component: {fileID: 97023740}
   m_Layer: 5
-  m_Name: PlayerCanvas1
+  m_Name: PlayerCanvas2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1454,7 +1454,7 @@ GameObject:
   - component: {fileID: 189456001}
   - component: {fileID: 189456003}
   m_Layer: 0
-  m_Name: Camera (1)
+  m_Name: Camera2
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1802,7 +1802,7 @@ GameObject:
   - component: {fileID: 219779013}
   - component: {fileID: 219779015}
   m_Layer: 0
-  m_Name: Camera (2)
+  m_Name: Camera3
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2387,7 +2387,7 @@ Prefab:
     - target: {fileID: 224717076843010860, guid: 9be8713dc6938c147b83ce6bb0ef7a12,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 224292213425565874, guid: 9be8713dc6938c147b83ce6bb0ef7a12,
         type: 2}
@@ -2406,7 +2406,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1570029419739860, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
       propertyPath: m_Name
-      value: EnergyGage2
+      value: EnergyGage3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
@@ -3985,7 +3985,7 @@ GameObject:
   - component: {fileID: 460331036}
   - component: {fileID: 460331035}
   m_Layer: 5
-  m_Name: PlayerCanvas2
+  m_Name: PlayerCanvas3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4909,7 +4909,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1663613577170202, guid: e3790a278dad8e748bca3d24939d5fc9, type: 2}
       propertyPath: m_Name
-      value: Player2
+      value: Player3
       objectReference: {fileID: 0}
     - target: {fileID: 114279976740525312, guid: e3790a278dad8e748bca3d24939d5fc9,
         type: 2}
@@ -5106,7 +5106,7 @@ Prefab:
       objectReference: {fileID: 9100000, guid: 55b61a4059813484fb5b9f1a713d24c1, type: 2}
     - target: {fileID: 1688632605001190, guid: 2b637451875f145438e671ae3cd84739, type: 2}
       propertyPath: m_Name
-      value: Player0
+      value: Player1
       objectReference: {fileID: 0}
     - target: {fileID: 114259430700838564, guid: 2b637451875f145438e671ae3cd84739,
         type: 2}
@@ -5992,7 +5992,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1455107832369666, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
       propertyPath: m_Name
-      value: HpGage2
+      value: HpGage3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
@@ -6111,7 +6111,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1455107832369666, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
       propertyPath: m_Name
-      value: HpGage0
+      value: HpGage1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
@@ -6520,7 +6520,7 @@ Prefab:
     - target: {fileID: 224717076843010860, guid: 9be8713dc6938c147b83ce6bb0ef7a12,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 224292213425565874, guid: 9be8713dc6938c147b83ce6bb0ef7a12,
         type: 2}
@@ -6539,7 +6539,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1570029419739860, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
       propertyPath: m_Name
-      value: EnergyGage1
+      value: EnergyGage2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
@@ -6918,17 +6918,17 @@ Prefab:
     - target: {fileID: 224218061916295922, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.104068756
+      value: 0.09453583
       objectReference: {fileID: 0}
     - target: {fileID: 224218061916295922, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.10406949
+      value: 0.09453591
       objectReference: {fileID: 0}
     - target: {fileID: 224244524603582550, guid: b4b8465909f2d8a49b70e0923eb16d7a,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.08004761
+      value: -0.059394836
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4b8465909f2d8a49b70e0923eb16d7a, type: 2}
@@ -7414,7 +7414,7 @@ GameObject:
   - component: {fileID: 800248452}
   - component: {fileID: 800248451}
   m_Layer: 5
-  m_Name: PlayerCanvas3
+  m_Name: PlayerCanvas4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7838,7 +7838,7 @@ GameObject:
   - component: {fileID: 843121023}
   - component: {fileID: 843121025}
   m_Layer: 0
-  m_Name: Camera (3)
+  m_Name: Camera4
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9654,7 +9654,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1552253277921358, guid: 9b2c87b1d4e8cc84cab3b4d8f2fcbfea, type: 2}
       propertyPath: m_Name
-      value: Player1
+      value: Player2
       objectReference: {fileID: 0}
     - target: {fileID: 114980801840560472, guid: 9b2c87b1d4e8cc84cab3b4d8f2fcbfea,
         type: 2}
@@ -11033,11 +11033,11 @@ Prefab:
     - target: {fileID: 224717076843010860, guid: 9be8713dc6938c147b83ce6bb0ef7a12,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 1570029419739860, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
       propertyPath: m_Name
-      value: EnergyGage0
+      value: EnergyGage1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9be8713dc6938c147b83ce6bb0ef7a12, type: 2}
@@ -11219,7 +11219,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1455107832369666, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
       propertyPath: m_Name
-      value: HpGage3
+      value: HpGage4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
@@ -11497,7 +11497,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1455107832369666, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
       propertyPath: m_Name
-      value: HpGage1
+      value: HpGage2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 19bea9009c13b664ca6a4388d0710b7c, type: 2}
@@ -12180,7 +12180,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1150411839098912, guid: e4e1985b32bdb814db1e7ccea780f272, type: 2}
       propertyPath: m_Name
-      value: Player3
+      value: Player4
       objectReference: {fileID: 0}
     - target: {fileID: 114920247420445378, guid: e4e1985b32bdb814db1e7ccea780f272,
         type: 2}
@@ -15873,6 +15873,10 @@ Prefab:
       propertyPath: target
       value: 
       objectReference: {fileID: 420905795}
+    - target: {fileID: 1713250241357230, guid: 65f6ed714568fba44859620e3a9aa2b5, type: 2}
+      propertyPath: m_Name
+      value: Camera1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 65f6ed714568fba44859620e3a9aa2b5, type: 2}
   m_IsPrefabParent: 0
