@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIManager : MonoBehaviour {
+public class GUIManager : MonoBehaviour
+{
 
     /*
     UI関連表示クラス
@@ -17,10 +19,11 @@ public class GUIManager : MonoBehaviour {
         POLICECAR // パトカー
     }
 
-    PlayerController player; // プレイヤー情報
+    PlayerController[] player=new PlayerController[4]; // プレイヤー情報
     GameManagement gm;
     public GameObject GameMaster;
-    public Slider energyGage1, energyGage2, energyGage3, energyGage4; // エネルギーゲージ
+    [NonSerialized] public Slider[] hpGage = new Slider[4];//HPゲージ
+    [NonSerialized] public Slider[] energyGage = new Slider[4]; // エネルギーゲージ
 
     public Image energyFull;
     public Image energyCaution;
@@ -41,16 +44,26 @@ public class GUIManager : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         gm = GameMaster.GetComponent<GameManagement>();
-        player = GameObject.Find("Player").GetComponent<PlayerController>();
-        energyGage1 = GameObject.Find("EnergyGage").GetComponent<Slider>();
+        for (int i = 0; i < player.Length; i++)
+        {
+            player[i] = GameObject.Find("Player" + i).GetComponent<PlayerController>();
+            hpGage[i] = GameObject.Find("HpGage" + i).GetComponent<Slider>();
+            energyGage[i] = GameObject.Find("EnergyGage" + i).GetComponent<Slider>();
+        }
         radioLog.CsvRead(readRadioName);
     }
 	
 	// Update is called once per frame
-	void Update () {
-        energyGage1.value = player.energy;
+	void Update ()
+    {
+        for (int i = 0; i < player.Length; i++)
+        {
+            hpGage[i].value = player[i].charactorHp;
+            energyGage[i].value = player[i].energy;
+        }
 
     }
 
@@ -60,7 +73,7 @@ public class GUIManager : MonoBehaviour {
 
     public void DownEnergy(float downValue)
     {
-        energyFull.fillAmount = downValue / player.maxEnergy;
+        //energyFull.fillAmount = downValue / player.maxEnergy;
     }
 
     public void LogShow(int sendWidth,int sendHeight,int textwidth,int textheight) // 通常ログ出力メソッド
