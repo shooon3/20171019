@@ -99,14 +99,25 @@ public class GameManagement : MonoBehaviour
                 GameOverFinish();
             }
         }
-        if (raidCount >= 2 && escapeLogCount == 0)
+        if (raidCount >= 1 && escapeLogCount == 0)
         {
+            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+            escapeLogCount++;
+        }
+        if (raidCount >= 2 && escapeLogCount == 1)
+        {
+            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
             // ここに逃走車接近のログを出す
             escapeLogCount++;
-            
         }
-        if (raidCount >= 4 && escapeLogCount == 1)
+        if (raidCount >= 3 && escapeLogCount == 2)
         {
+            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+            escapeLogCount++;
+        }
+        if (raidCount >= 4 && escapeLogCount == 3)
+        {
+            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
             // ここに逃走車が警戒区域内に入るログを出す
             Debug.Log("逃走車両が侵入");
             escapeObj.SetActive(true);

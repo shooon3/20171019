@@ -28,8 +28,8 @@ public class ct_test : MonoBehaviour {
 		//Aキー入力でゲーム開始準備
 		if (Pad_A.A && GameStartFlgA == false) { GameStartFlgA= true; GameObject.Instantiate(A_OK); }
 		if (Pad_B.A && GameStartFlgB == false) { GameStartFlgB = true; GameObject.Instantiate(B_OK); }
-		if (Pad_C.A || GameStartFlgC == false) { GameStartFlgC = true; GameObject.Instantiate(C_OK); }
-		if (Pad_D.A || GameStartFlgD == false) { GameStartFlgD = true; GameObject.Instantiate(D_OK); }
+		if (Pad_C.A && GameStartFlgC == false) { GameStartFlgC = true; GameObject.Instantiate(C_OK); }
+		if (Pad_D.A && GameStartFlgD == false) { GameStartFlgD = true; GameObject.Instantiate(D_OK); }
 		
 		//Bキー入力でゲーム開始準備の取り消し objectの消去がわからなかったので、一度タグ検索をかけています
 		if (Pad_A.B) { GameStartFlgA = false; Game = GameObject.FindGameObjectWithTag("P_A"); Destroy(Game); }

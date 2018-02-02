@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
     private float XKeySensitivity = 2.0f;
     // Use this for initialization
     void Start () {
-        offset = new Vector3(0.0f, 2.0f, 0.5f);
+        offset = new Vector3(0.0f, 2.25f, 0.2f);
     }
 	
 	// Update is called once per frame

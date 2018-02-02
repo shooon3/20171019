@@ -366,6 +366,7 @@ public class PlayerController : MonoBehaviour {
         {
             int damage = 20;
             charactorHp -= damage;
+            Destroy(col.gameObject);
         }
 
         if (col.gameObject.tag == "Under")
