@@ -47,17 +47,12 @@ public class GUIManager : MonoBehaviour
 	void Start ()
     {
         gm = GameMaster.GetComponent<GameManagement>();
-<<<<<<< HEAD
-        player = GameObject.Find("Player1").GetComponent<PlayerController>();
-        energyGage1 = GameObject.Find("EnergyGage").GetComponent<Slider>();
-=======
         for (int i = 0; i < player.Length; i++)
         {
             player[i] = GameObject.Find("Player" + (i + 1)).GetComponent<PlayerController>();
             hpGage[i] = GameObject.Find("HpGage" + (i + 1)).GetComponent<Slider>();
             energyGage[i] = GameObject.Find("EnergyGage" + (i + 1)).GetComponent<Slider>();
         }
->>>>>>> 929e15d7a0830cc971a7c5d518dac15839d99545
         radioLog.CsvRead(readRadioName);
     }
 	
