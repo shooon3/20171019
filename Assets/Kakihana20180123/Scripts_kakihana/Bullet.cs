@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour
+{
 
     private Transform playerTransform;// プレイヤーの座標
     private GameObject playerObj;// プレイヤーのゲームオブジェクトを格納
+    public string camName;
 
   //  private PlayerController player;
 
@@ -13,12 +15,13 @@ public class Bullet : MonoBehaviour {
     private Vector3 bulletDirection = new Vector3(0.0f, 0.0f, 0.0f); // 弾の移動量
     public Vector3 offset = new Vector3(0.0f, 2.0f, 0.0f);
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         playerObj = GameObject.FindGameObjectWithTag("Misdeed");
         playerTransform = playerObj.transform;
-       // player = playerObj.GetComponent<PlayerController>(); // プレイヤー情報クラスのコンポーネントを取得
+        // player = playerObj.GetComponent<PlayerController>(); // プレイヤー情報クラスのコンポーネントを取得
         transform.position = playerTransform.position + offset; // 弾の発射座標をプレイヤー自身に
-        transform.forward = Camera.main.transform.forward; // 発射方向は常に画面の中央部分に
+        transform.forward = GameObject.Find("Camera1").transform.forward; // 発射方向は常に画面の中央部分に
 		
 	}
 	

@@ -81,6 +81,8 @@ public class PlayerController : MonoBehaviour {
     public bool rescue = false;
     public bool beRescue = false;
 
+    public string camName;
+
     // Use this for initialization
     void Start () {
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<GameManagement>();
@@ -92,7 +94,7 @@ public class PlayerController : MonoBehaviour {
         guimanager = statusObj.GetComponent<GUIManager>();
         rescueObj.SetActive(false);
         CharactorSetup();// キャラクターステータスの初期設定
-        playerCam = Camera.main; // カメラの情報を格納
+        playerCam = GameObject.Find(camName).GetComponent<Camera>(); // カメラの情報を格納
         originSpeed = charactorSpeed; // 元スピードは最初に取得したスピードに
         //}
     }

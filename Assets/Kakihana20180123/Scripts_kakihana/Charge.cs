@@ -14,19 +14,14 @@ public class Charge : MonoBehaviour {
 	void Update () {
         if (chargeFlg == true)
         {
-            int count;
-            count = Time.frameCount % 5;
-            player.energy += count;
-            if (player.energy >= player.maxEnergy)
-            {
-                chargeFlg = false;
-            }
+            player.energy = 100;
+            chargeFlg = false;
         }
 
 	}
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Terrorist") // プレイヤーが接近した時にプレイヤー情報を取得
+        if (col.gameObject.tag == "Misdeed") // プレイヤーが接近した時にプレイヤー情報を取得
         {
             playerObj = col.gameObject;
             player = playerObj.GetComponent<PlayerController>();

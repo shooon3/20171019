@@ -24,10 +24,12 @@ public class GUIManager : MonoBehaviour
     public GameObject GameMaster;
     [NonSerialized] public Slider[] hpGage = new Slider[4];//HPゲージ
     [NonSerialized] public Slider[] energyGage = new Slider[4]; // エネルギーゲージ
+    
 
     public Image energyFull;
     public Image energyCaution;
     public Image energyDanger;
+    public Image[] iconImage;
 
     [SerializeField] private RectTransform content; // 追加するコンテンツ
     [SerializeField] private RectTransform originElement; // 生成する枠
@@ -52,6 +54,7 @@ public class GUIManager : MonoBehaviour
             player[i] = GameObject.Find("Player" + (i + 1)).GetComponent<PlayerController>();
             hpGage[i] = GameObject.Find("HpGage" + (i + 1)).GetComponent<Slider>();
             energyGage[i] = GameObject.Find("EnergyGage" + (i + 1)).GetComponent<Slider>();
+            iconImage[i].enabled = false;
         }
         radioLog.CsvRead(readRadioName);
     }
@@ -63,6 +66,14 @@ public class GUIManager : MonoBehaviour
         {
             hpGage[i].value = player[i].charactorHp;
             energyGage[i].value = player[i].energy;
+            if (player[i].isStun == true)
+            {
+                iconImage[i].enabled = true;
+            }
+            else
+            {
+                iconImage[i].enabled = false;
+            }
         }
 
     }

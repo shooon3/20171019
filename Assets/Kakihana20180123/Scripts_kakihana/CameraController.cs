@@ -33,14 +33,17 @@ public class CameraController : MonoBehaviour
     private float XKeySensitivity = 2.0f;
     // Use this for initialization
     void Start () {
-        offset = new Vector3(0.0f, 1.8f, 0.0f);
+        offset = new Vector3(0.0f, 2.0f, 0.5f);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
         var Pad = GamePad.GetState(padID, false);
-       //   if (Pad.LeftShoulder)
+        if (Pad.LeftShoulder)
+        {
+            currentX += -XKeySensitivity;
+        }
         if (Pad.RightShoulder)
         {
             currentX += XKeySensitivity;
@@ -58,7 +61,7 @@ public class CameraController : MonoBehaviour
                 Quaternion rotation = Quaternion.Euler(-currentY, currentX, 0);
                 transform.position = lookAt + rotation * dir;   //カメラの位置を変更
                 transform.LookAt(lookAt);   //カメラをLookAtの方向に向けさせる
-        }
+           }
 
     }
 

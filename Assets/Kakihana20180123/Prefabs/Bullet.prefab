@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf03d39da77f394385841647812f79d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camName: Camera1
   offset: {x: 0, y: 1.5, z: 1}
 --- !u!135 &135021142343338972
 SphereCollider:
