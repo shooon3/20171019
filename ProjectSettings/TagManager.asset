@@ -17,6 +17,8 @@ TagManager:
   - Rescue
   - Bullet
   - Punch
+  - Escape
+  - Raid
   layers:
   - Default
   - TransparentFX

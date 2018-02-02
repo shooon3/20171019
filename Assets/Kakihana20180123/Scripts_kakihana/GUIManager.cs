@@ -43,7 +43,7 @@ public class GUIManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         gm = GameMaster.GetComponent<GameManagement>();
-        player = GameObject.Find("Player").GetComponent<PlayerController>();
+        player = GameObject.Find("Player1").GetComponent<PlayerController>();
         energyGage1 = GameObject.Find("EnergyGage").GetComponent<Slider>();
         radioLog.CsvRead(readRadioName);
     }

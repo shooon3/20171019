@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using GamepadInput;
 
 public class CameraController : MonoBehaviour {
 
@@ -12,13 +13,15 @@ public class CameraController : MonoBehaviour {
     private const float X_ANGLE_MAX = 45.0f;
 
     public Transform target;
-   // public PlayerController player;
+    public PlayerController player;
     public Vector3 offset;
     private Vector3 lookAt;
 
-    private float distance = 10.0f;
-    private float distance_Min = 1.0f;
-    private float distance_Max = 2.0f;
+    public GamePad.Index padID;
+
+    private float distance = 0.01f;
+    private float distance_Min = 0.01f;
+    private float distance_Max = 0.01f;
     private float currentX = 0.0f;
     private float currentY = 0.0f;
 
@@ -27,41 +30,41 @@ public class CameraController : MonoBehaviour {
     private float XKeySensitivity = 2.0f;
     // Use this for initialization
     void Start () {
-        offset = new Vector3(0.0f,1.5f,2.0f);
-	}
+        offset = new Vector3(0.0f, 1.8f, 0.0f);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKey(KeyCode.Q))
+        var Pad = GamePad.GetState(padID, false);
+        if (Pad.LeftShoulder)
         {
             currentX += -XKeySensitivity;
         }
-        if (Input.GetKey(KeyCode.E))
+        if (Pad.RightShoulder)
         {
             currentX += XKeySensitivity;
         }
-        if (Input.GetAxis("Mouse X") >= 0 || Input.GetAxis("Mouse Y") >= 0)
-        {
-            currentX += Input.GetAxis("Mouse X") * XSensitivity;
-            currentY += Input.GetAxis("Mouse Y") * YSensitivity;
-            currentX = Mathf.Clamp(currentX, X_ANGLE_MIN, X_ANGLE_MAX);
-            currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
-        }
-        distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel"), distance_Min, distance_Max);
+        //if (Input.GetAxis("Mouse X") >= 0 || Input.GetAxis("Mouse Y") >= 0)
+        //{
+        //    currentX += Input.GetAxis("Mouse X") * XSensitivity;
+        //    currentY += Input.GetAxis("Mouse Y") * YSensitivity;
+        //    currentX = Mathf.Clamp(currentX, X_ANGLE_MIN, X_ANGLE_MAX);
+        //    currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+        //}
+       // distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel"), distance_Min, distance_Max);
     }
 
     void LateUpdate()
     {
-        if (target != null)  //targetが指定されるまでのエラー回避
-        {
-            lookAt = target.position + offset;  //注視座標はtarget位置+offsetの座標
+            if (target != null)  //targetが指定されるまでのエラー回避
+            {
+                lookAt = target.position + offset;  //注視座標はtarget位置+offsetの座標
 
-            //カメラ旋回処理
-            Vector3 dir = new Vector3(0, 0, -distance);
-            Quaternion rotation = Quaternion.Euler(-currentY, currentX, 0);
-
-            transform.position = lookAt + rotation * dir;   //カメラの位置を変更
-            transform.LookAt(lookAt);   //カメラをLookAtの方向に向けさせる
+                //カメラ旋回処理
+                Vector3 dir = new Vector3(0, 0, -distance);
+                Quaternion rotation = Quaternion.Euler(-currentY, currentX, 0);
+                transform.position = lookAt + rotation * dir;   //カメラの位置を変更
+                transform.LookAt(lookAt);   //カメラをLookAtの方向に向けさせる
         }
 
     }

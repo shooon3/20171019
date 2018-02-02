@@ -9,10 +9,12 @@ public class GameManagement : MonoBehaviour {
 
     public GameObject[] playerObj = new GameObject[PLAYER_PEOPLE]; // 参照するプレイヤー
     public GameObject[] uniqueObj = new GameObject[PLAYER_PEOPLE]; // プレイヤーを識別するための子オブジェクト
+    public GameObject escapeObj;
     public Transform[] playerTrans = new Transform[PLAYER_PEOPLE]; // プレイヤーの座標
     [SerializeField]
     private PlayerController[] playerInfo = new PlayerController[PLAYER_PEOPLE];
     GUIManager guimanager;
+    Raid raid;
 
     public int[] playerId = new int[PLAYER_PEOPLE]; // プレイヤーID
     public string[] playerName = new string[PLAYER_PEOPLE]; // プレイヤー名
@@ -25,9 +27,12 @@ public class GameManagement : MonoBehaviour {
     public int count = 0; // 経過時間
     const int timeLimit = 300; // 制限時間
 
-    public int logCount = 0;
+    public int logCount = 0; // 一度しかメッセージが流れないようにログ出力をカウント（警察サイド用）
+    public int escapeLogCount = 0; // 一度しかメッセージが流れないようにログ出力をカウント（ミスディード用）
     public int startCount = 0;
     int startCountLimit = 10;
+
+    public int raidCount = 0;
 
     public List<bool> isStun = new List<bool>(); // 気絶しているか
     public List<bool> isArrest = new List<bool>(); // 確保されたか（テロリスト）
@@ -35,13 +40,16 @@ public class GameManagement : MonoBehaviour {
     public List<bool> rescue = new List<bool>(); // 気絶状態から回復行動をしているプレイヤーを検知 
 
     public bool startFlg = false;
+    public int finishLogCount = 0;
 
 	// Use this for initialization
 	void Start () {
         GameObject statusObj = GameObject.Find("Status");
         guimanager = statusObj.GetComponent<GUIManager>();
+        raid = statusObj.GetComponent<Raid>();
         PlayerInfoInit();
         PlayerMoneyInit();
+        escapeObj.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -49,6 +57,7 @@ public class GameManagement : MonoBehaviour {
         if (Time.frameCount % 60 ==0)
         {
             startCount++;
+            raidCount = raid.raidCount;
         }
         if (startCount >= 1 && logCount == 0)
         {
@@ -80,14 +89,27 @@ public class GameManagement : MonoBehaviour {
             {
                 count++;
             }
-            if (count >= timeLimit) // countが300（5分）超えるとゲーム終了
+            if (count >= timeLimit && finishLogCount == 0) // countが300（5分）超えるとゲーム終了
             {
                 // ゲーム終了メソッド
-                GameFinish();
+                GameOverFinish();
             }
         }
-		
-	}
+        if (raidCount >= 2 && escapeLogCount == 0)
+        {
+            // ここに逃走車接近のログを出す
+            escapeLogCount++;
+            
+        }
+        if (raidCount >= 4 && escapeLogCount == 1)
+        {
+            // ここに逃走車が警戒区域内に入るログを出す
+            Debug.Log("逃走車両が侵入");
+            escapeObj.SetActive(true);
+            escapeLogCount++;
+        }
+
+    }
 
     public void PlayerInfoInit() // ユニークオブジェクトより各プレイヤーの情報を格納
     {
@@ -189,19 +211,22 @@ public class GameManagement : MonoBehaviour {
         misdeedGroupMoney += money;
     }
 
-    public void GameFinish() // 引き分けメソッド
+    public void GameOverFinish() // 引き分けメソッド
     {
-
+        guimanager.LogShow(
+        (int)GUIManager.SenderList.POLICECAR, 0, (int)GUIManager.SenderList.POLICECAR, 2);
+        finishLogCount++;
     }
 
-    public void ArrestFinish() // ガーディアン勝利メソッド
+    public void GuardianWinFinish() // ガーディアン勝利メソッド
     {
-
+        Debug.Log("ガーディアン勝利メソッド検知");
     }
 
-    public void EscapeFinish() // ミスディード勝利メソッド
+    public void MisdeedWinFinish() // ミスディード勝利メソッド
     {
-
+     guimanager.LogShow(
+     (int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 8);
     }
 
 }
