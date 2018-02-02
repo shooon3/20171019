@@ -57,9 +57,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
     [SerializeField] public float rotSpeed = 3.0f; // 旋回速度
     public float rescueTime = 0.0f;
-    public float rescueTimeLimit = 3.0f;
+    public float rescueTimeLimit = 30.0f;
     public float actionTime = 0.0f;
-    public float actionTimeLimit = 3.0f;
+    public float actionTimeLimit = 2.0f;
 
     [SerializeField] private Camera playerCam; // カメラオブジェクトを格納
     const string statusName = "Status"; // ステータスオブジェクトの名前
@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour {
     public bool falling = false; // ステージ外に居るか
     public bool isStun = false;
     public bool rescue = false;
+    public bool beRescue = false;
 
     // Use this for initialization
     void Start () {
@@ -99,15 +100,6 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         var Pad = GamePad.GetState(padId, false);
-        //if (!myPhotonView.isMine)// 自分のキャラクターでなければ実行されない
-        //{
-        //    return;
-        //}
-
-        //if (actionType == Action.NONE)// 何も行動していなければ
-        //{
-        //    MoveUpdate(); // 移動量を決めるメソッド
-        //}
         if (!isStun && gm.startFlg == true)
         {
             MoveUpdate(); // 移動量を決めるメソッド
@@ -281,7 +273,8 @@ public class PlayerController : MonoBehaviour {
                 actionType = Action.NONE;
                 break;
             case Action.RESCUE: // 気絶しているプレイヤーを救助
-                Rescue();
+                IsRescue();
+                Debug.Log("救出１OK");
                 break;
             case Action.ESCAPE:
                 MisdeedEscape();
@@ -297,12 +290,12 @@ public class PlayerController : MonoBehaviour {
         rescueObj.SetActive(true); // 救助用当たり判定を表示
         animator.SetBool("Stun", true);
         actionType = Action.RESCUEWAIT; // 行動は気絶待ち状態に
-        //rescueTime += Time.deltaTime;
-        //if (rescueTime > rescueTimeLimit)
-        //{
-        //    isStun = false;
-        //    animator.SetBool("Stun", false);
-        //}
+        rescueTime += Time.deltaTime;
+        if (beRescue == true /*|| rescueTime >= rescueTimeLimit*/)
+        {
+            Rescue();
+            rescueTime = 0.0f;
+        }
         //guimanager.LogShow(
         //    (int)GUIManager.SenderList.SYSTEM, 0,
         //    (int)GUIManager.SenderList.SYSTEM, 4); // 気絶ログを表示
@@ -315,14 +308,14 @@ public class PlayerController : MonoBehaviour {
         actionType = Action.NONE; // 自分の行動状態を通常に
     }
 
-    public void Rescue() // 救出メソッド
+    public void Rescue() // 復活メソッド
     {
         if (actionType == Action.RESCUEWAIT) // 救助待ちなら
         {
             charactorHp = charactorMaxHp; // 自分のHPを回復
             actionType = Action.NONE; // 通常状態に
             isStun = false; // 気絶を解除
-            /*gm.isStun[orderNum] = false;*/ // マスタークラスに気絶解除を送信
+            animator.SetBool("Stun", false);
             rescueObj.SetActive(false); // 救助用当たり判定を非表示に
         }
     }
@@ -360,7 +353,7 @@ public class PlayerController : MonoBehaviour {
             rescuePlayerScript = beRescueObj.GetComponent<PlayerController>();
         }
 
-        if (col.gameObject.tag == "Bullet")
+        if (col.gameObject.tag == "Bullet" && playerType == (int)PLAYERTYPE.GUARDIAN)
         {
             int damage = 80;
             charactorHp -= damage;

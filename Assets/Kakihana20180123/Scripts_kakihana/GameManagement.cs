@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManagement : MonoBehaviour
 {
@@ -223,11 +224,13 @@ public class GameManagement : MonoBehaviour
 
     public void GuardianWinFinish() // ガーディアン勝利メソッド
     {
+        SceneManager.LoadScene("WINGrardian");
         Debug.Log("ガーディアン勝利メソッド検知");
     }
 
     public void MisdeedWinFinish() // ミスディード勝利メソッド
     {
+        SceneManager.LoadScene("WINMisdeed");
      guimanager.LogShow(
      (int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 8);
     }

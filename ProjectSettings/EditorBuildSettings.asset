@@ -6,11 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/photonSave.unity
-    guid: 224a7f397aff92c4cb495696f643b985
+    path: Assets/Kani/Room/CT_TEST.unity
+    guid: 123056bc057b9444a9d84cd958b50c29
   - enabled: 1
-    path: Assets/nakashima/title_Scene.unity
-    guid: f2ec92472e3c0c849976ba7fb8e40544
+    path: Assets/Kakihana20180123/stage.unity
+    guid: bbf27c97e0c40e54fa0c9e953d38bd62
   - enabled: 1
-    path: Assets/maptest.unity
-    guid: c116dd8d502a04e43b15d7985bcc6c12
+    path: Assets/Kani/GameEndSeen/WINGrardian.unity
+    guid: 4ccd683ae9bc7b14496de2d8cf54933b
+  - enabled: 1
+    path: Assets/Kani/GameEndSeen/WINMisdeed.unity
+    guid: 5c2e6e5500179d645a9a75bcb67b5928
