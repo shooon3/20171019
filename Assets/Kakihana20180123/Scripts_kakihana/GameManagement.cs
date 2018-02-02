@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagement : MonoBehaviour {
+public class GameManagement : MonoBehaviour
+{
 
     /*共有したいゲーム情報を管理するクラス*/
     const int PLAYER_PEOPLE = 4; // プレイヤー人数
@@ -53,7 +55,8 @@ public class GameManagement : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         if (Time.frameCount % 60 ==0)
         {
             startCount++;

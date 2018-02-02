@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using GamepadInput;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour
+{
 
     private const float Y_ANGLE_MIN = -89.0f;
     private const float Y_ANGLE_MAX = 89.0f;
@@ -12,6 +14,7 @@ public class CameraController : MonoBehaviour {
     private const float X_ANGLE_MIN = -45.0f;
     private const float X_ANGLE_MAX = 45.0f;
 
+    public RectTransform targetnam;
     public Transform target;
     public PlayerController player;
     public Vector3 offset;
@@ -29,6 +32,7 @@ public class CameraController : MonoBehaviour {
     private float YSensitivity = 2.0f;
     private float XKeySensitivity = 2.0f;
     // Use this for initialization
+<<<<<<< HEAD
     void Start () {
         offset = new Vector3(0.0f, 1.8f, 0.0f);
     }
@@ -37,6 +41,17 @@ public class CameraController : MonoBehaviour {
 	void Update () {
         var Pad = GamePad.GetState(padID, false);
         if (Pad.LeftShoulder)
+=======
+    void Start ()
+    {
+        offset = new Vector3(0.0f,1.5f,2.0f);
+	}
+	
+	// Update is called once per frame
+	void Update ()
+    {
+        if (Input.GetKey(KeyCode.Q))
+>>>>>>> 929e15d7a0830cc971a7c5d518dac15839d99545
         {
             currentX += -XKeySensitivity;
         }
