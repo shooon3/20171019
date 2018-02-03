@@ -11,8 +11,8 @@ public class CameraController : MonoBehaviour
     private const float Y_ANGLE_MIN = -89.0f;
     private const float Y_ANGLE_MAX = 89.0f;
 
-    private const float X_ANGLE_MIN = -45.0f;
-    private const float X_ANGLE_MAX = 45.0f;
+    //private const float X_ANGLE_MIN = -180.0f;
+    //private const float X_ANGLE_MAX = 180.0f;
 
     public RectTransform targetnam;
     public Transform target;
@@ -20,12 +20,17 @@ public class CameraController : MonoBehaviour
     public Vector3 offset;
     private Vector3 lookAt;
 
+    private float OffsetX = 1f;
+    private float OffsetY = 2.25f;
+    private float OffsetZ = 1f;
+
+
     public GamePad.Index padID;
 
     private float distance = 0.01f;
     private float distance_Min = 0.01f;
     private float distance_Max = 0.01f;
-    private float currentX = 0.0f;
+   [SerializeField] private float currentX = 0.0f;
     private float currentY = 0.0f;
 
     private float XSensitivity = 2.0f;
@@ -33,7 +38,7 @@ public class CameraController : MonoBehaviour
     private float XKeySensitivity = 2.0f;
     // Use this for initialization
     void Start () {
-        offset = new Vector3(0.0f, 2.25f, 0.2f);
+        offset = new Vector3(0.0f, OffsetY, OffsetZ);
     }
 	
 	// Update is called once per frame
@@ -47,6 +52,31 @@ public class CameraController : MonoBehaviour
         if (Pad.RightShoulder)
         {
             currentX += XKeySensitivity;
+        }
+        //if (currentX >= X_ANGLE_MAX)
+        //{
+        //    currentX = X_ANGLE_MAX;
+        //}
+        //else if (currentX <= X_ANGLE_MIN)
+        //{
+        //    currentX = X_ANGLE_MIN;
+        //}
+        //offset = new Vector3(player.charMove.x,OffsetY,player.charMove.z);
+        if (/*currentX >= 90 &&*/ player.charMove.x > 0)
+        {
+            offset = new Vector3(OffsetX, OffsetY, 0);
+        }
+        if (/*currentX <= -90 &&*/ player.charMove.x < 0)
+        {
+            offset = new Vector3(-OffsetX, OffsetY, 0);
+        }
+        if (/*currentX >= 90 && player.charMove.z > 0)
+        {
+            offset = new Vector3(0, OffsetY, OffsetZ);
+        }
+        if (/*currentX <= -90 && */player.charMove.z < 0)
+        {
+            offset = new Vector3(0, OffsetY, -OffsetZ);
         }
     }
 

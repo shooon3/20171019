@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
 
     public Animator animator; // キャラクターのアニメーター
     public CharacterController cc; // キャラクターコントローラー
+    public AudioClip bulletSe, punchSe;
     CharactorStatus charactorstatus; // 各種キャラクターデータを参照するクラス
     GUIManager guimanager; // GUIクラスのオブジェクト
     GameManagement gm; // マスタークラスのオブジェクト
@@ -57,7 +58,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float punchTimeInterval = 0.0f; // 素手攻撃の間隔
     [SerializeField] public float rotSpeed = 3.0f; // 旋回速度
     public float rescueTime = 0.0f;
-    public float rescueTimeLimit = 30.0f;
+    [SerializeField]
+    private float rescueTimeLimit = 20.0f;
     public float actionTime = 0.0f;
     public float actionTimeLimit = 2.0f;
 
@@ -205,18 +207,6 @@ public class PlayerController : MonoBehaviour {
             animator.SetBool("Run", false);
         }
 
-        //if (Input.GetKey(KeyCode.LeftShift) == true)
-        //{
-        //    charactorSpeed = (charactorSpeed * runSpeed);
-        //}
-        //else
-        //{
-        //    charactorSpeed = originSpeed;
-        //}
-        //if (Pad.X)
-        //{
-        //    charMove.y = jumpSpeed;
-        //}
         //else
         //{
         float tempY = charMove.y;
@@ -244,6 +234,7 @@ public class PlayerController : MonoBehaviour {
         if (punchTimeInterval <= 0)
         {
             GameObject.Instantiate(punch);
+            gm.audiosource.PlayOneShot(punchSe);
             punchTimeInterval = 0.5f;
         }
     }
@@ -253,6 +244,7 @@ public class PlayerController : MonoBehaviour {
         if (bulletTimeInterval <= 0 && energy > 0)
         {
             GameObject.Instantiate(bullet); // 弾を発射
+            gm.audiosource.PlayOneShot(bulletSe);
             energy -= 20;
             bulletTimeInterval = 0.75f;
         }
@@ -293,7 +285,7 @@ public class PlayerController : MonoBehaviour {
         animator.SetBool("Stun", true);
         actionType = Action.RESCUEWAIT; // 行動は気絶待ち状態に
         rescueTime += Time.deltaTime;
-        if (beRescue == true /*|| rescueTime >= rescueTimeLimit*/)
+        if (beRescue == true || rescueTime >= rescueTimeLimit)
         {
             Rescue();
             rescueTime = 0.0f;

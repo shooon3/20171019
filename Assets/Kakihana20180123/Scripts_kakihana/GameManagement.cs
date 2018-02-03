@@ -19,6 +19,9 @@ public class GameManagement : MonoBehaviour
     GUIManager guimanager;
     Raid raid;
 
+    public AudioSource audiosource;
+    public AudioClip silen, carApproach, carArrival,bgm;
+
     public int[] playerId = new int[PLAYER_PEOPLE]; // プレイヤーID
     public string[] playerName = new string[PLAYER_PEOPLE]; // プレイヤー名
     public int[] playerHp = new int[PLAYER_PEOPLE]; // プレイヤーHP
@@ -28,11 +31,13 @@ public class GameManagement : MonoBehaviour
     public int misdeedGroupMoney; // ミスディード側の所持金
 
     public int count = 0; // 経過時間
+    private int policeCarApproach = 240;
     const int timeLimit = 300; // 制限時間
 
     public int logCount = 0; // 一度しかメッセージが流れないようにログ出力をカウント（警察サイド用）
     public int escapeLogCount = 0; // 一度しかメッセージが流れないようにログ出力をカウント（ミスディード用）
     public int startCount = 0;
+    public int escapeCarLogCount = 0;
     int startCountLimit = 10;
 
     public int raidCount = 0;
@@ -43,10 +48,14 @@ public class GameManagement : MonoBehaviour
     public List<bool> rescue = new List<bool>(); // 気絶状態から回復行動をしているプレイヤーを検知 
 
     public bool startFlg = false;
+    public bool logFlg = false;
     public int finishLogCount = 0;
 
 	// Use this for initialization
 	void Start () {
+        audiosource = GetComponent<AudioSource>();
+        audiosource.clip = bgm;
+        audiosource.Play();
         GameObject statusObj = GameObject.Find("Status");
         guimanager = statusObj.GetComponent<GUIManager>();
         raid = statusObj.GetComponent<Raid>();
@@ -58,6 +67,7 @@ public class GameManagement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        
         if (Time.frameCount % 60 ==0)
         {
             startCount++;
@@ -89,9 +99,31 @@ public class GameManagement : MonoBehaviour
         }
         if (startFlg == true)
         {
+            switch (logCount)
+            {
+                case 4:
+                    guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 9);
+                    logCount++;
+                    break;
+                case 5:
+                    guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 10);
+                    logCount++;
+                    break;
+            }
             if (Time.frameCount % 60 == 0) // １秒毎にcountを足す
             {
                 count++;
+            }
+            if (count >= policeCarApproach)
+            {
+                if (logCount == 6)
+                {
+                    audiosource.enabled = false;
+                    audiosource.clip = silen;
+                    audiosource.enabled = true;
+                    guimanager.LogShow((int)GUIManager.SenderList.POLICECAR, 0, (int)GUIManager.SenderList.POLICECAR, 3);
+                    logCount++;
+                }
             }
             if (count >= timeLimit && finishLogCount == 0) // countが300（5分）超えるとゲーム終了
             {
@@ -99,31 +131,77 @@ public class GameManagement : MonoBehaviour
                 GameOverFinish();
             }
         }
+
+        if (logFlg == true)
+        {
+            StartCoroutine("EscapeCar");
+            logFlg = false;
+        }
+
         if (raidCount >= 1 && escapeLogCount == 0)
         {
-            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+            guimanager.PlayerInfulenceLogShow(
+                (int)GUIManager.SenderList.SYSTEM, 0,
+                playerInfo[0].playerName,
+                (int)GUIManager.SenderList.SYSTEM, 4,
+                raidCount,
+                (int)GUIManager.SenderList.SYSTEM, 6
+                );
             escapeLogCount++;
         }
         if (raidCount >= 2 && escapeLogCount == 1)
         {
-            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+            audiosource.PlayOneShot(carApproach);
+            logFlg = true;
+            guimanager.PlayerInfulenceLogShow(
+            (int)GUIManager.SenderList.SYSTEM, 0,
+            playerInfo[0].playerName,
+            (int)GUIManager.SenderList.SYSTEM, 4,
+             raidCount,
+            (int)GUIManager.SenderList.SYSTEM, 6
+            );
             // ここに逃走車接近のログを出す
             escapeLogCount++;
         }
         if (raidCount >= 3 && escapeLogCount == 2)
         {
-            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+            guimanager.PlayerInfulenceLogShow(
+            (int)GUIManager.SenderList.SYSTEM, 0,
+            playerInfo[0].playerName,
+            (int)GUIManager.SenderList.SYSTEM, 4,
+             raidCount,
+            (int)GUIManager.SenderList.SYSTEM, 6
+            );
             escapeLogCount++;
         }
         if (raidCount >= 4 && escapeLogCount == 3)
         {
-            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 3);
+            audiosource.PlayOneShot(carArrival);
+            guimanager.PlayerInfulenceLogShow(
+            (int)GUIManager.SenderList.SYSTEM, 0,
+            playerInfo[0].playerName,
+            (int)GUIManager.SenderList.SYSTEM, 4,
+             raidCount,
+            (int)GUIManager.SenderList.SYSTEM, 6
+            );
+            guimanager.LogShow((int)GUIManager.SenderList.SYSTEM, 0, (int)GUIManager.SenderList.SYSTEM, 11);
             // ここに逃走車が警戒区域内に入るログを出す
             Debug.Log("逃走車両が侵入");
             escapeObj.SetActive(true);
             escapeLogCount++;
         }
 
+    }
+    IEnumerator EscapeCar()
+    {
+        guimanager.LogShow((int)GUIManager.SenderList.POLICE, 0, (int)GUIManager.SenderList.POLICE, 3);
+        yield return new WaitForSeconds(2.0f);
+        guimanager.LogShow((int)GUIManager.SenderList.COMMAND, 0, (int)GUIManager.SenderList.COMMAND, 2);
+        yield return new WaitForSeconds(2.0f);
+        guimanager.LogShow((int)GUIManager.SenderList.COMMAND, 0, (int)GUIManager.SenderList.COMMAND, 3);
+        yield return new WaitForSeconds(2.0f);
+        guimanager.LogShow((int)GUIManager.SenderList.POLICECAR, 0, (int)GUIManager.SenderList.POLICECAR, 1);
+        yield return null;
     }
 
     public void PlayerInfoInit() // ユニークオブジェクトより各プレイヤーの情報を格納
@@ -228,15 +306,17 @@ public class GameManagement : MonoBehaviour
 
     public void GameOverFinish() // 引き分けメソッド
     {
+        if (logCount == 7)
+        {
         guimanager.LogShow(
         (int)GUIManager.SenderList.POLICECAR, 0, (int)GUIManager.SenderList.POLICECAR, 2);
-        finishLogCount++;
+        }
+        SceneManager.LoadScene("Draw");
     }
 
     public void GuardianWinFinish() // ガーディアン勝利メソッド
     {
         SceneManager.LoadScene("WINGrardian");
-        Debug.Log("ガーディアン勝利メソッド検知");
     }
 
     public void MisdeedWinFinish() // ミスディード勝利メソッド

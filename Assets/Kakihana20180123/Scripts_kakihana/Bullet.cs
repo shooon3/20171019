@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
 
   //  private PlayerController player;
 
-    float shootSpeed = 10.0f; // 弾のスピード
+    float shootSpeed = 30.0f; // 弾のスピード
     private Vector3 bulletDirection = new Vector3(0.0f, 0.0f, 0.0f); // 弾の移動量
     public Vector3 offset = new Vector3(0.0f, 2.0f, 0.0f);
     // Use this for initialization

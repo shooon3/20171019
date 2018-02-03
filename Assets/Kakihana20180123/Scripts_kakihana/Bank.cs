@@ -48,13 +48,13 @@ public class Bank : MonoBehaviour {
             getMoney = thisBankRaid();
             haveMoney = haveMoney - getMoney;
             gm.RaidMoney(getMoney);
-            guimanager.PlayerInfulenceLogShow(
-                (int)GUIManager.SenderList.SYSTEM, 0,
-                player.playerName,
-                (int)GUIManager.SenderList.SYSTEM, 4,
-                getMoney,
-                (int)GUIManager.SenderList.SYSTEM, 6
-                );
+            //guimanager.PlayerInfulenceLogShow(
+            //    (int)GUIManager.SenderList.SYSTEM, 0,
+            //    player.playerName,
+            //    (int)GUIManager.SenderList.SYSTEM, 4,
+            //    getMoney,
+            //    (int)GUIManager.SenderList.SYSTEM, 6
+            //    );
             raid = false;
         }
     }
