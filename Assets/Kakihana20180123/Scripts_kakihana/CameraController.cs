@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
     private Vector3 lookAt;
 
     private float OffsetX = 1f;
-    private float OffsetY = 2.25f;
+    private float OffsetY = 2.5f;
     private float OffsetZ = 1f;
 
 
@@ -45,11 +45,12 @@ public class CameraController : MonoBehaviour
 	void Update ()
     {
         var Pad = GamePad.GetState(padID, false);
-        if (Pad.LeftShoulder)
+        float RightStick = Pad.rightStickAxis.x;
+        if (Pad.LeftShoulder||RightStick<-0.5f)
         {
             currentX += -XKeySensitivity;
         }
-        if (Pad.RightShoulder)
+        if (Pad.RightShoulder || RightStick > 0.5f)
         {
             currentX += XKeySensitivity;
         }

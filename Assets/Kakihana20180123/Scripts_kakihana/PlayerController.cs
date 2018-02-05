@@ -245,7 +245,7 @@ public class PlayerController : MonoBehaviour {
         {
             GameObject.Instantiate(bullet); // 弾を発射
             gm.audiosource.PlayOneShot(bulletSe);
-            energy -= 20;
+            energy -= 5;
             bulletTimeInterval = 0.75f;
         }
     }

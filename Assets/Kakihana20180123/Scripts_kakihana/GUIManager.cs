@@ -30,6 +30,7 @@ public class GUIManager : MonoBehaviour
     public Image energyCaution;
     public Image energyDanger;
     public Image[] iconImage;
+    public Image[] actionIcon;
 
     [SerializeField] private RectTransform content; // 追加するコンテンツ
     [SerializeField] private RectTransform originElement; // 生成する枠
@@ -55,6 +56,7 @@ public class GUIManager : MonoBehaviour
             hpGage[i] = GameObject.Find("HpGage" + (i + 1)).GetComponent<Slider>();
             energyGage[i] = GameObject.Find("EnergyGage" + (i + 1)).GetComponent<Slider>();
             iconImage[i].enabled = false;
+            actionIcon[i].enabled = false;
         }
         radioLog.CsvRead(readRadioName);
     }
@@ -73,6 +75,15 @@ public class GUIManager : MonoBehaviour
             else
             {
                 iconImage[i].enabled = false;
+            }
+            if (player[i].actionType != 0)
+            {
+                
+                actionIcon[i].enabled = true;
+            }
+            else
+            {
+                actionIcon[i].enabled = false;
             }
         }
 

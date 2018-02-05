@@ -11,9 +11,11 @@ public class Bullet : MonoBehaviour
 
   //  private PlayerController player;
 
-    float shootSpeed = 30.0f; // 弾のスピード
+    float shootSpeed = 50.0f; // 弾のスピード
     private Vector3 bulletDirection = new Vector3(0.0f, 0.0f, 0.0f); // 弾の移動量
     public Vector3 offset = new Vector3(0.0f, 2.0f, 0.0f);
+    float bulletTime = 0.0f;
+    float bulletTimeLimit = 2.0f;
     // Use this for initialization
     void Start ()
     {
@@ -27,10 +29,11 @@ public class Bullet : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
+        bulletTime += Time.deltaTime;
         // 弾の移動
         transform.position += transform.forward * shootSpeed * Time.deltaTime;
         // 原点から30マス以上離れたら削除する
-        if (Time.deltaTime % 60 == 0)
+        if (bulletTime > bulletTimeLimit)
         {
             Destroy(this.gameObject);
         }
